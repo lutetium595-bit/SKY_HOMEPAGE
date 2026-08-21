@@ -54,6 +54,23 @@ function requireAdmin(req, res, next) {
   next();
 }
 
+
+// 공용 일정 API: 일정표와 프로필 주간일정표가 같은 PostgreSQL 데이터를 사용합니다.
+app.get("/api/events", async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT value FROM sky_day_data WHERE key = $1",
+      ["skyCalendarEvents"]
+    );
+    if (!result.rowCount) return res.json([]);
+    const value = result.rows[0].value;
+    res.json(Array.isArray(value) ? value : []);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "일정을 불러오지 못했습니다." });
+  }
+});
+
 app.get("/api/health", async (req, res) => {
   try {
     await pool.query("SELECT 1");

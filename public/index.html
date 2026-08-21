@@ -1231,5 +1231,123 @@ updateDDay();renderWeek();
 })();
 </script>
 
+
+<!-- SKY-DAY PROFILE SCHEDULE SYNC V2 -->
+<script>
+(function () {
+  function pad(n){ return String(n).padStart(2,"0"); }
+  function dateKey(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+
+  function normalizeDate(value){
+    if(!value) return null;
+    var m = String(value).match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if(!m) return null;
+    var d = new Date(Number(m[1]), Number(m[2])-1, Number(m[3]), 12, 0, 0);
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  function weekRange(){
+    var now = new Date();
+    var start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12);
+    start.setDate(start.getDate() - start.getDay());
+    var end = new Date(start);
+    end.setDate(end.getDate() + 6);
+    return {start:start, end:end};
+  }
+
+  function inWeek(event, start, end){
+    var s = normalizeDate(event.date);
+    var e = normalizeDate(event.end_date || event.date);
+    return s && e && !(e < start || s > end);
+  }
+
+  function pickEvents(events){
+    var range = weekRange();
+    return (Array.isArray(events) ? events : [])
+      .filter(function(e){ return inWeek(e, range.start, range.end); })
+      .sort(function(a,b){ return String(a.date||"").localeCompare(String(b.date||"")); });
+  }
+
+  function eventLabel(e){
+    var parts = [];
+    if(e.time) parts.push(e.time);
+    if(e.cat) parts.push(e.cat);
+    parts.push(e.title || "일정");
+    return parts.filter(Boolean).join(" · ");
+  }
+
+  function renderEvents(events){
+    var selected = pickEvents(events);
+    var targets = [
+      "#weeklySchedule", "#weekSchedule", "#weeklyList",
+      ".weekly-schedule", ".week-schedule", ".schedule-list"
+    ];
+
+    var box = null;
+    for(var i=0;i<targets.length;i++){
+      box = document.querySelector(targets[i]);
+      if(box) break;
+    }
+
+    // If the existing profile uses another layout, try to find a section containing "주간일정표".
+    if(!box){
+      var all = Array.from(document.querySelectorAll("section,div,article"));
+      var heading = all.find(function(el){
+        var t = (el.innerText || "").trim();
+        return t === "주간일정표" || /^주간일정표\s*$/.test(t);
+      });
+      if(heading && heading.parentElement) box = heading.parentElement;
+    }
+
+    if(!box) return false;
+
+    var old = box.querySelector("[data-sky-db-week-events]");
+    if(old) old.remove();
+
+    var wrap = document.createElement("div");
+    wrap.setAttribute("data-sky-db-week-events","1");
+    wrap.className = "sky-db-week-events";
+
+    if(!selected.length){
+      wrap.innerHTML = '<div class="sky-db-week-empty">이번 주 등록된 일정이 없습니다.</div>';
+    } else {
+      wrap.innerHTML = selected.map(function(e){
+        var s = String(e.date||"");
+        var en = String(e.end_date||"");
+        var date = en && en !== s ? s + " ~ " + en : s;
+        return '<div class="sky-db-week-event">' +
+          '<span class="sky-db-week-date">'+date+'</span>' +
+          '<span class="sky-db-week-title">'+eventLabel(e)+'</span>' +
+        '</div>';
+      }).join("");
+    }
+
+    box.appendChild(wrap);
+    return true;
+  }
+
+  var style = document.createElement("style");
+  style.textContent =
+    '.sky-db-week-events{display:flex;flex-direction:column;gap:8px;margin-top:10px}' +
+    '.sky-db-week-event{display:flex;gap:10px;align-items:center;padding:9px 10px;border-radius:12px;background:rgba(127,127,127,.08);font-size:13px}' +
+    '.sky-db-week-date{font-weight:700;white-space:nowrap;opacity:.8}' +
+    '.sky-db-week-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}' +
+    '.sky-db-week-empty{padding:10px 0;font-size:13px;opacity:.65}';
+  document.head.appendChild(style);
+
+  function load(){
+    fetch("/api/events", {cache:"no-store"})
+      .then(function(r){ if(!r.ok) throw new Error("events"); return r.json(); })
+      .then(function(events){ renderEvents(events); })
+      .catch(function(err){ console.warn("주간일정표 불러오기 실패", err); });
+  }
+
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", load);
+  else load();
+
+  setInterval(load, 15000);
+})();
+</script>
+
 </body>
 </html>
