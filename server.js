@@ -100,7 +100,8 @@ app.put("/api/data/:key", validKey, requireAdmin, async (req, res) => {
   }
 });
 
-app.get("*", (req, res) => {
+// Express 5에서는 app.get("*") 문법이 오류를 내므로 정규식으로 처리합니다.
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
