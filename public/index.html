@@ -1,0 +1,1235 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>각하늘 - DAY</title>
+<style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,"Noto Sans KR",sans-serif;color:#17396f;background:linear-gradient(135deg,#edf7ff,#fff);min-height:100vh}
+body.dark{color:#eef5ff;background:linear-gradient(135deg,#111827,#1d293b)}
+header{height:64px;margin:12px 14px;padding:0 20px;border:1px solid #d8e6f7;border-radius:18px;background:rgba(255,255,255,.82);backdrop-filter:blur(12px);display:flex;align-items:center}
+.dark header,.dark .card,.dark .quick,.dark .shortcut-box,.dark .modal{background:rgba(28,40,59,.94);border-color:#33445f}
+.logo{font-size:26px;font-weight:900;color:#4285f4}
+.header-actions{position:fixed;right:14px;top:12px;display:flex;gap:8px;z-index:1000}
+.icon{width:40px;height:40px;border:0;border-radius:50%;background:#fff;box-shadow:0 5px 18px #7890aa33;cursor:pointer;font-size:18px;color:#17396f}
+.dark .icon{background:#26344a;color:#eef5ff}
+nav{display:none;position:fixed;right:14px;top:62px;width:180px;padding:9px;background:#fff;border:1px solid #d8e6f7;border-radius:14px;box-shadow:0 15px 40px #0002;z-index:1001}
+nav.show{display:flex;flex-direction:column}
+nav a{padding:11px;color:#17396f;text-decoration:none;font-weight:800;border-radius:8px}nav a:hover{background:#eef6ff}
+.dark nav{background:#202c40;border-color:#33445f}.dark nav a{color:#eef5ff}.dark nav a:hover{background:#293a54}
+main{width:min(1400px,calc(100% - 40px));margin:24px auto 40px}
+.hero{display:grid;grid-template-columns:1fr 1.35fr 1fr;gap:18px}
+.card,.quick,.shortcut-box{background:rgba(255,255,255,.86);border:1px solid #d8e6f7;border-radius:18px;box-shadow:0 10px 30px #527eb01a}
+.intro{padding:30px;display:flex;flex-direction:column;justify-content:center;min-height:290px}
+.welcome{font-size:14px;margin-bottom:18px}.name{font-size:58px;font-weight:900;letter-spacing:-4px}.name span{color:#8bb7ff}.message{margin-top:20px;font-size:16px}
+.gif{overflow:hidden;min-height:290px}.gif img{display:block;width:100%;height:100%;min-height:290px;object-fit:cover}
+.profile{padding:24px}.title{font-size:21px;font-weight:900;color:#4285f4;margin-bottom:18px}
+.row{display:grid;grid-template-columns:105px 1fr auto;gap:8px;margin:12px 0;font-size:14px}.extra{color:#4285f4;font-size:12px;white-space:nowrap}
+.btn{width:100%;border:0;border-radius:10px;padding:11px;background:#4285f4;color:#fff;font-weight:800;cursor:pointer;margin-top:8px}
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}.quick{padding:18px;display:flex;align-items:center;gap:0;cursor:pointer}.qi{display:none}.qt{font-weight:900}.qs{font-size:11px;color:#7588a5;margin-top:3px}
+.content{display:grid;grid-template-columns:2fr 1fr;gap:18px}.card{padding:20px}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.head h2{margin:0;font-size:19px}.arrows{display:flex;gap:5px}.arrows button{border:1px solid #d8e6f7;background:transparent;color:inherit;border-radius:7px;width:32px;height:32px;cursor:pointer}
+.scroll{overflow:auto}.week-grid{display:grid;grid-template-columns:repeat(7,minmax(100px,1fr));min-width:700px;border:1px solid #d8e6f7}.day{min-height:150px;border-right:1px solid #d8e6f7;border-bottom:1px solid #d8e6f7;padding:8px}.day:nth-child(7n){border-right:0}.dayhead{font-size:12px;font-weight:900;margin-bottom:8px}.event{font-size:10px;font-weight:800;padding:6px;border-radius:7px;margin:5px 0;line-height:1.3}.blue{background:#dbeaff;color:#2863bd}.green{background:#ddf5e5;color:#25834a}.pink{background:#ffe0f0;color:#c83b77}.purple{background:#e8e0ff;color:#7048bd}.orange{background:#ffe9ca;color:#b76b00}
+
+.notice li{padding:11px 0;border-bottom:1px solid #d8e6f7;font-size:12px}.notice ul{list-style:none;padding:0;margin:0}.badge{background:#4285f4;color:white;border-radius:5px;padding:3px 5px;font-size:9px;margin-right:6px}
+.shortcut-box{margin-top:18px;padding:18px}.shortcut-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.shortcut{min-height:52px;border:1px solid #d8e6f7;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;cursor:pointer;background:rgba(255,255,255,.5)}
+footer{text-align:center;color:#8090a8;font-size:11px;margin-top:20px}
+.modal-bg{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;padding:15px;z-index:2000}.modal-bg.show{display:flex}.modal{width:min(900px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:20px;padding:22px}.modal.small{width:min(430px,100%)}.modal h2{margin-top:0}.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:11px;font-weight:800;color:#7184a0}.field input,.field select,.field textarea{padding:10px;border:1px solid #d8e6f7;border-radius:9px;font:inherit}.field textarea{min-height:80px}.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.actions .btn{width:auto;margin:0}.secondary{background:#eef5ff;color:#17396f}.danger{background:#d9534f}.admin-list{margin-top:18px;border-top:1px solid #d8e6f7}.admin-item{padding:11px 0;border-bottom:1px solid #d8e6f7;display:flex;justify-content:space-between;gap:10px}.meta{font-size:11px;color:#7184a0;margin-top:4px}
+@media(max-width:1000px){.hero{grid-template-columns:1fr 1fr}.gif{display:none}.content{grid-template-columns:1fr}}
+@media(max-width:650px){main{width:calc(100% - 16px);margin-top:15px}.hero{display:flex;flex-direction:column}.intro{min-height:180px;padding:20px}.name{font-size:43px}.gif{display:block;min-height:200px}.gif img{min-height:200px;height:200px}.row{grid-template-columns:82px 1fr;font-size:13px}.extra{grid-column:2}.quick-grid{grid-template-columns:1fr 1fr;gap:8px}.quick{padding:12px}.qi{display:none}.content{display:flex;flex-direction:column}.fields{grid-template-columns:1fr}.field.full{grid-column:auto}.shortcut-grid{grid-template-columns:1fr 1fr}.week-grid{min-width:700px}.header-actions{right:9px;top:9px}.icon{width:36px;height:36px}}
+
+/* ===== 이전 일정표 캡처 스타일 기반 주간 일정표 ===== */
+.weekly-calendar-card{
+  padding:0!important;
+  overflow:hidden;
+  background:rgba(255,255,255,.88)!important;
+  border:1px solid rgba(157,188,220,.32)!important;
+  box-shadow:0 16px 45px rgba(91,130,177,.12)!important;
+}
+.dark .weekly-calendar-card{
+  background:rgba(30,39,55,.94)!important;
+  border-color:rgba(160,190,225,.15)!important;
+}
+.calendar-top{
+  padding:24px 22px 14px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+  border-bottom:1px solid rgba(157,188,220,.28);
+}
+.calendar-top h2{
+  margin:0;
+  font-size:24px;
+  letter-spacing:-1px;
+  color:#20304a;
+}
+.dark .calendar-top h2{color:#eef5ff}
+.calendar-top p{
+  margin:7px 0 0;
+  color:#7287a3;
+  font-size:12px;
+}
+.calendar-actions{display:flex;gap:7px;flex-shrink:0}
+.cal-btn{
+  min-width:42px;height:42px;
+  border:1px solid rgba(157,188,220,.32);
+  background:#edf7ff;
+  color:#304b70;
+  border-radius:11px;
+  font-size:18px;
+  cursor:pointer;
+}
+.today-btn{padding:0 13px;font-size:12px;font-weight:800}
+.dark .cal-btn{background:#26364d;color:#eaf2ff;border-color:#3a4d69}
+.category-legend{
+  display:flex;flex-wrap:wrap;gap:7px;
+  padding:12px 22px 10px;
+}
+.category-legend span{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 10px;border-radius:999px;
+  background:#f6f9fd;color:#687c97;font-size:11px;font-weight:800;
+  border:1px solid rgba(157,188,220,.22);
+}
+.dark .category-legend span{background:#263449;color:#b9c8dc}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.dot.broadcast{background:#f28bb2}
+.dot.game{background:#9c82ef}
+.dot.talk{background:#66a9ef}
+.dot.break{background:#efc85b}
+.dot.etc{background:#69c7ad}
+.week-caption{
+  padding:5px 22px 12px;
+  font-size:20px;
+  font-weight:900;
+  color:#27364a;
+}
+.dark .week-caption{color:#edf4ff}
+.calendar-scroll{overflow-x:auto;padding:0 0 18px;-webkit-overflow-scrolling:touch}
+.screenshot-week{
+  min-width:780px;
+  display:grid;
+  grid-template-columns:repeat(7,minmax(105px,1fr));
+  border-top:1px solid rgba(157,188,220,.30);
+  border-left:1px solid rgba(157,188,220,.30);
+}
+.screenshot-week .week-column{
+  min-height:245px;
+  border-right:1px solid rgba(157,188,220,.30);
+  border-bottom:1px solid rgba(157,188,220,.30);
+  background:rgba(255,255,255,.55);
+}
+.dark .screenshot-week .week-column{background:rgba(30,40,56,.65)}
+.screenshot-week .week-header{
+  height:58px;
+  padding:9px;
+  text-align:center;
+  border-bottom:1px solid rgba(157,188,220,.30);
+  background:rgba(247,251,255,.75);
+}
+.dark .screenshot-week .week-header{background:rgba(37,50,69,.75)}
+.week-header .dow{font-size:11px;color:#7b8ea6;font-weight:800}
+.week-header .date{font-size:15px;color:#31445e;font-weight:900;margin-top:4px}
+.dark .week-header .date{color:#edf4ff}
+.screenshot-event{
+  margin:7px 7px 0;
+  min-height:31px;
+  border-radius:8px;
+  padding:7px 9px;
+  font-size:10px;
+  font-weight:800;
+  line-height:1.35;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  box-shadow:0 3px 8px rgba(90,120,160,.07);
+}
+.screenshot-event.broadcast{background:#ffe4ef;color:#9f4e70;border-left:3px solid #f28bb2}
+.screenshot-event.game{background:#eee7ff;color:#6b58a0;border-left:3px solid #9c82ef}
+.screenshot-event.talk{background:#e4f2ff;color:#47769f;border-left:3px solid #66a9ef}
+.screenshot-event.break{background:#fff2d2;color:#9b7a24;border-left:3px solid #efc85b}
+.screenshot-event.etc{background:#e0f5ee;color:#43806e;border-left:3px solid #69c7ad}
+.dark .screenshot-event.broadcast{background:#5a3045;color:#ffd7e8}
+.dark .screenshot-event.game{background:#443b64;color:#e4d9ff}
+.dark .screenshot-event.talk{background:#304b67;color:#d9eeff}
+.dark .screenshot-event.break{background:#5a4a24;color:#ffe8a8}
+.dark .screenshot-event.etc{background:#2d5147;color:#d4fff1}
+.empty-day{color:#a6b4c5;font-size:10px;text-align:center;padding-top:22px}
+@media(max-width:650px){
+  .calendar-top{padding:18px 14px 12px}
+  .calendar-top h2{font-size:19px}
+  .calendar-top p{font-size:10px}
+  .calendar-actions{gap:5px}
+  .cal-btn{min-width:35px;height:35px}
+  .today-btn{padding:0 9px}
+  .category-legend{padding:9px 14px}
+  .category-legend span{font-size:9px;padding:5px 8px}
+  .week-caption{padding:3px 14px 10px;font-size:16px}
+  .screenshot-week{min-width:720px}
+  .screenshot-week .week-column{min-height:210px}
+}
+
+
+/* 주간 날짜 범위 + 카테고리 범례 한 줄 배치 */
+.week-caption-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:7px 22px 11px;
+  border-bottom:0;
+}
+.week-caption-row .week-caption{
+  padding:0;
+  margin:0;
+  font-size:17px;
+  line-height:1.35;
+  white-space:nowrap;
+}
+.week-caption-row .category-legend{
+  padding:0;
+  margin:0;
+  justify-content:flex-end;
+}
+.week-caption-row .category-legend span{
+  padding:5px 8px;
+  font-size:10px;
+}
+@media(max-width:800px){
+  .week-caption-row{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:7px;
+    padding:7px 14px 10px;
+  }
+  .week-caption-row .category-legend{
+    justify-content:flex-start;
+    width:100%;
+    overflow-x:auto;
+    flex-wrap:nowrap;
+  }
+}
+@media(max-width:650px){
+  .week-caption-row .week-caption{font-size:15px}
+  .week-caption-row .category-legend span{font-size:9px;padding:4px 7px}
+}
+
+
+/* 날짜 범위 오른쪽에 카테고리 색상표시 */
+.week-caption-row{
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:20px !important;
+  width:100%;
+}
+.week-caption-row .week-caption{
+  flex:0 0 auto;
+}
+.week-caption-row .category-legend{
+  flex:0 0 auto;
+  display:flex !important;
+  align-items:center;
+  justify-content:flex-start !important;
+  flex-wrap:nowrap !important;
+  gap:6px;
+  padding:0 !important;
+  margin:0 !important;
+}
+.week-caption-row .category-legend span{
+  white-space:nowrap;
+}
+
+/* 작은 화면에서만 공간 부족 시 날짜 아래로 자연스럽게 배치 */
+@media(max-width:800px){
+  .week-caption-row{
+    flex-direction:row !important;
+    align-items:center !important;
+    overflow-x:hidden !important;
+    white-space:nowrap;
+    scrollbar-width:none;
+  }
+  .week-caption-row::-webkit-scrollbar{
+    display:none;
+    width:0;
+    height:0;
+  }
+  .week-caption-row .category-legend{
+    flex-wrap:nowrap !important;
+  }
+}
+
+
+.week-caption-row{
+  scrollbar-width:none;
+}
+.week-caption-row::-webkit-scrollbar{
+  display:none;
+  width:0;
+  height:0;
+}
+
+
+.section-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:18px;
+}
+.section-head .title{
+  margin:0;
+}
+.more-btn{
+  border:0;
+  background:transparent;
+  color:#4285f4;
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+  padding:5px 2px;
+  white-space:nowrap;
+}
+.more-btn:hover{
+  text-decoration:underline;
+}
+.notice-title{
+  margin-bottom:0!important;
+}
+
+
+.shortcut{
+  min-height:64px!important;
+  padding:8px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:11px;
+  overflow:hidden;
+}
+.shortcut img{
+  width:24px;
+  height:24px;
+  object-fit:contain;
+  flex:0 0 24px;
+  border-radius:4px;
+}
+.shortcut span{
+  font-weight:800;
+  white-space:nowrap;
+}
+@media(max-width:650px){
+  .shortcut{min-height:58px!important;padding:7px 9px;gap:8px}
+  .shortcut img{width:20px;height:20px;flex-basis:20px}
+  .shortcut span{font-size:11px}
+}
+
+
+.shortcut img.youtube-icon{
+  width:24px;
+  height:24px;
+  flex-basis:24px;
+}
+@media(max-width:650px){
+  .shortcut img.youtube-icon{
+    width:20px;
+    height:20px;
+    flex-basis:20px;
+  }
+}
+
+
+/* 상단 우측 컨트롤 고정 */
+.header-actions{
+  position:absolute !important;
+  top:50% !important;
+  right:14px !important;
+  transform:translateY(-50%) !important;
+  z-index:1000 !important;
+  display:flex !important;
+  gap:8px !important;
+}
+@media(max-width:650px){
+  .header-actions{
+    top:9px !important;
+    right:9px !important;
+  }
+}
+
+
+header{
+  position:relative !important;
+  padding-right:170px !important;
+}
+@media(max-width:650px){
+  header{
+    padding-right:130px !important;
+  }
+  .header-actions{
+    top:50% !important;
+    right:8px !important;
+    transform:translateY(-50%) !important;
+  }
+}
+
+
+/* SKY 상단바 안에 버튼을 실제로 배치 */
+header{
+  position:relative !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  padding-right:20px !important;
+}
+header .header-actions{
+  position:static !important;
+  top:auto !important;
+  right:auto !important;
+  transform:none !important;
+  margin-left:auto !important;
+  display:flex !important;
+  align-items:center !important;
+  gap:8px !important;
+  z-index:10 !important;
+}
+@media(max-width:650px){
+  header{
+    padding-right:12px !important;
+  }
+  header .header-actions{
+    margin-left:auto !important;
+    gap:5px !important;
+  }
+}
+
+
+/* 다크모드 바로가기 카드 색상 조정 */
+.dark .shortcut-box{
+  background:rgba(24,32,46,.96)!important;
+  border-color:rgba(130,160,195,.18)!important;
+}
+.dark .shortcut{
+  background:rgba(35,46,64,.92)!important;
+  border-color:rgba(140,170,205,.16)!important;
+  color:#e8f0fb!important;
+  box-shadow:0 6px 18px rgba(0,0,0,.16)!important;
+}
+.dark .shortcut:hover{
+  background:rgba(44,58,79,.98)!important;
+  border-color:rgba(150,180,215,.24)!important;
+}
+.dark .shortcut span{
+  color:#e8f0fb!important;
+}
+
+
+/* 바로가기 글자를 칸의 정중앙에 배치 */
+.shortcut{
+  justify-content:center !important;
+  text-align:center !important;
+}
+.shortcut span{
+  text-align:center !important;
+}
+
+
+/* 바로가기 아이콘과 글자 간격을 살짝 좁힘 */
+.shortcut{
+  gap:6px !important;
+}
+
+
+/* 유튜브 바로가기만 아이콘과 글자 사이를 더 좁게 */
+.youtube-shortcut{
+  gap:2px !important;
+}
+
+
+/* 방송요일을 PROFILE의 다른 정보와 동일한 위치/정렬로 표시 */
+.profile-row .label,
+.profile-row .value{
+  vertical-align:middle;
+}
+.profile-row .label{
+  text-align:left;
+}
+.profile-row .value{
+  text-align:left;
+}
+
+
+/* 방송요일: '방송요일'은 고정방송시간 라벨 열, 내용은 오후 5시 값 열에 정렬 */
+.broadcast-days-row{
+  display:grid !important;
+  grid-template-columns:110px minmax(0,1fr) !important;
+  align-items:center !important;
+}
+.broadcast-days-row .label{
+  grid-column:1 !important;
+  text-align:left !important;
+}
+.broadcast-days-row .value{
+  grid-column:2 !important;
+  text-align:left !important;
+}
+@media(max-width:650px){
+  .broadcast-days-row{
+    grid-template-columns:88px minmax(0,1fr) !important;
+  }
+}
+
+
+/* 방송요일 내용의 폰트/크기/두께를 기존 PROFILE 값과 동일하게 */
+.broadcast-days-row .value{
+  font:inherit !important;
+  font-size:inherit !important;
+  font-weight:inherit !important;
+  line-height:inherit !important;
+  letter-spacing:inherit !important;
+  color:inherit !important;
+}
+
+
+/* 방송요일 행을 위쪽 텍스트 라인과 맞추고 라벨 두께를 고정방송시간과 동일하게 */
+.broadcast-days-row{
+  transform:translateY(-2px);
+}
+.broadcast-days-row .label{
+  font-weight:700 !important;
+}
+
+
+/* 방송요일 라벨의 크기/두께를 기존 PROFILE 라벨과 동일하게 */
+.broadcast-days-row .label{
+  font-size:inherit !important;
+  font-weight:inherit !important;
+  line-height:inherit !important;
+}
+.broadcast-days-row .value{
+  font-size:inherit !important;
+  font-weight:inherit !important;
+  line-height:inherit !important;
+}
+
+
+/* 방송요일 글씨 크기만 기존 PROFILE 글씨와 동일하게 조정 */
+
+@media(max-width:650px){
+  
+}
+
+
+/* 방송요일은 현재 글씨 크기를 그대로 두고, 폰트 두께만 일반 PROFILE 글씨와 동일하게 */
+.broadcast-days-row .label,
+.broadcast-days-row .value{
+  font-weight:400 !important;
+}
+
+
+/* PROFILE 주요 정보 6개 항목의 폰트 두께를 완전히 동일하게 */
+.profile-row .label,
+.profile-row .value,
+.broadcast-days-row .label,
+.broadcast-days-row .value{
+  font-weight:500 !important;
+}
+
+
+/* 우상단 ☰ 메뉴 패널이 뒤의 글씨에 비치거나 뚫려 보이지 않도록 */
+.menu-panel,
+.dropdown-menu,
+.mobile-menu,
+.nav-menu{
+  background:#ffffff !important;
+  opacity:1 !important;
+  position:absolute;
+  z-index:5000 !important;
+  isolation:isolate;
+}
+.dark .menu-panel,
+.dark .dropdown-menu,
+.dark .mobile-menu,
+.dark .nav-menu{
+  background:#18202e !important;
+}
+.menu-panel::before,
+.dropdown-menu::before,
+.mobile-menu::before,
+.nav-menu::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:inherit;
+  z-index:-1;
+  border-radius:inherit;
+}
+
+
+/* ☰ 메뉴 자체(#nav)가 뒤 콘텐츠를 완전히 가리도록 직접 수정 */
+header #nav{
+  position:fixed !important;
+  top:62px !important;
+  right:14px !important;
+  width:180px !important;
+  box-sizing:border-box !important;
+  padding:9px !important;
+  background:#fff !important;
+  background-color:#fff !important;
+  opacity:1 !important;
+  visibility:visible;
+  overflow:hidden !important;
+  isolation:isolate !important;
+  z-index:99999 !important;
+  border:1px solid #d8e6f7 !important;
+  box-shadow:0 15px 40px rgba(0,0,0,.16) !important;
+}
+header #nav.show{
+  display:flex !important;
+  flex-direction:column !important;
+}
+header #nav a{
+  position:relative !important;
+  z-index:2 !important;
+  background:#fff !important;
+  color:#17396f !important;
+  opacity:1 !important;
+}
+.dark header #nav{
+  background:#202c40 !important;
+  background-color:#202c40 !important;
+  border-color:#33445f !important;
+}
+.dark header #nav a{
+  background:#202c40 !important;
+  color:#eef5ff !important;
+}
+@media(max-width:650px){
+  header #nav{
+    top:56px !important;
+    right:9px !important;
+    width:170px !important;
+  }
+}
+
+
+/* ☰ 메뉴가 PROFILE 내용보다 항상 위에 표시되도록 상단바 자체의 stacking을 올림 */
+header{
+  position:relative !important;
+  z-index:10000 !important;
+  overflow:visible !important;
+}
+header #nav{
+  position:absolute !important;
+  top:52px !important;
+  right:0 !important;
+  z-index:10001 !important;
+  display:none;
+  box-sizing:border-box !important;
+  width:180px !important;
+  padding:9px !important;
+  background:#fff !important;
+  background-image:none !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  overflow:hidden !important;
+  border:1px solid #d8e6f7 !important;
+  border-radius:14px !important;
+  box-shadow:0 15px 40px rgba(0,0,0,.16) !important;
+}
+header #nav.show{
+  display:flex !important;
+  flex-direction:column !important;
+}
+header #nav a{
+  display:block !important;
+  position:relative !important;
+  z-index:10002 !important;
+  background:#fff !important;
+  color:#17396f !important;
+  opacity:1 !important;
+}
+.dark header #nav{
+  background:#202c40 !important;
+  background-color:#202c40 !important;
+  border-color:#33445f !important;
+}
+.dark header #nav a{
+  background:#202c40 !important;
+  color:#eef5ff !important;
+}
+@media(max-width:650px){
+  header #nav{
+    top:48px !important;
+    right:0 !important;
+    width:170px !important;
+  }
+}
+
+
+/* PROFILE 좌측 항목과 우측 내용을 각각 같은 열에 정확히 정렬 */
+.profile-row{
+  display:grid !important;
+  grid-template-columns:110px minmax(0,1fr) !important;
+  align-items:center !important;
+  column-gap:12px !important;
+}
+.profile-row .label,
+.broadcast-days-row .label{
+  grid-column:1 !important;
+  width:auto !important;
+  margin:0 !important;
+  text-align:left !important;
+  justify-self:start !important;
+}
+.profile-row .value,
+.broadcast-days-row .value{
+  grid-column:2 !important;
+  width:auto !important;
+  margin:0 !important;
+  text-align:left !important;
+  justify-self:start !important;
+}
+@media(max-width:650px){
+  .profile-row{
+    grid-template-columns:88px minmax(0,1fr) !important;
+    column-gap:10px !important;
+  }
+}
+
+
+/* PROFILE 폰트 통일: 좌측 라벨끼리 / 우측 내용끼리 각각 동일 */
+.profile-row .label,
+.broadcast-days-row .label{
+  font-size:14px !important;
+  font-weight:500 !important;
+  line-height:1.5 !important;
+}
+.profile-row .value,
+.broadcast-days-row .value{
+  font-size:14px !important;
+  font-weight:400 !important;
+  line-height:1.5 !important;
+}
+@media(max-width:650px){
+  .profile-row .label,
+  .broadcast-days-row .label{
+    font-size:13px !important;
+  }
+  .profile-row .value,
+  .broadcast-days-row .value{
+    font-size:13px !important;
+  }
+}
+
+
+/* PROFILE 모든 행을 동일한 2열 구조로 고정 */
+.profile-row,
+.broadcast-days-row{
+  display:grid !important;
+  grid-template-columns:110px minmax(0,1fr) !important;
+  column-gap:12px !important;
+  align-items:center !important;
+  width:100% !important;
+  box-sizing:border-box !important;
+}
+.profile-row > .label,
+.broadcast-days-row > .label{
+  grid-column:1 !important;
+  grid-row:1 !important;
+  display:block !important;
+  width:100% !important;
+  margin:0 !important;
+  padding:0 !important;
+  text-align:left !important;
+  justify-self:stretch !important;
+}
+.profile-row > .value,
+.broadcast-days-row > .value{
+  grid-column:2 !important;
+  grid-row:1 !important;
+  display:block !important;
+  width:100% !important;
+  margin:0 !important;
+  padding:0 !important;
+  text-align:left !important;
+  justify-self:stretch !important;
+  white-space:normal !important;
+}
+@media(max-width:650px){
+  .profile-row,
+  .broadcast-days-row{
+    grid-template-columns:88px minmax(0,1fr) !important;
+    column-gap:10px !important;
+  }
+}
+
+
+/* 방송요일 우측 내용만 추가로 밀려 있지 않도록 기존 위치로 정확히 맞춤 */
+.broadcast-days-row{
+  transform:none !important;
+}
+.broadcast-days-row .value{
+  padding-left:0 !important;
+  margin-left:0 !important;
+  text-indent:0 !important;
+}
+
+
+/* 방송요일 우측 내용만 다른 우측 내용보다 살짝 왼쪽으로 이동 */
+.broadcast-days-row .value{
+  transform:translateX(-4px) !important;
+}
+
+
+/* 방송요일 우측 내용만 조금 더 왼쪽으로 */
+.broadcast-days-row .value{
+  transform:translateX(-8px) !important;
+}
+
+</style>
+</head>
+<body>
+<header><div class="logo">SKY</div><div class="header-actions">
+<button class="icon" id='sky-day-theme' onclick="toggleTheme()">☼</button>
+<button class="icon" onclick="toggleNav()">☰</button>
+<button class="icon" onclick="openAdmin()">⚙</button>
+</div><nav id="nav">
+<a href="notice/index.html">공지사항</a>
+<a href="calendar/index.html">캘린더</a>
+<a href="dressing-room/index.html">의상목록</a>
+<a href="upbo/index.html">업보목록</a>
+</nav></header>
+
+
+
+<main>
+<section class="hero">
+<div class="card intro"><div class="welcome">안녕하세요! 각하늘의 공간에 오신 것을 환영해요</div><div class="name">각하늘 <span>♡</span></div><div class="message">오늘도 찾아와줘서 고마워요!</div></div>
+<div class="card gif" id="live"><img src="https://stimg.afreecatv.com/NORMAL_BBS/1/24960761/45616668a579de86a.gif" alt="각하늘 프로필 이미지"></div>
+<div class="card profile" id="profile">
+<div class="section-head"><div class="title">PROFILE</div><button class="more-btn" onclick="showText('프로필 더보기','프로필 상세 내용을 확인할 수 있습니다.')">더보기</button></div>
+<div class="row"><b>생일</b><span>02월 04일</span><span class="extra" id="dday">계산중</span></div>
+<div class="row"><b>첫 방송일</b><span>2022년 10월 10일</span><span class="extra" id="days">계산중</span></div>
+<div class="row"><b>MBTI</b><span>INFJ / ESTP</span></div>
+<div class="row"><b>고정방송시간</b><span>오후 5시</span></div>
+<div class="profile-row broadcast-days-row"><span class="label">방송요일</span><span class="value">월 · 화 · 수 · 목 · 금 / 일요일 고정휴방</span></div>
+<div class="row"><b>좋아하는 것</b><span>가족, 각시의 사랑, 비오는 날,<br>눈오는 날, 손끝에 스치는 바람</span></div>
+</div>
+</section>
+
+<section class="quick-grid">
+<div class="quick" onclick="window.location.href='./calendar/index.html'"><div><div class="qt">일정표</div><div class="qs">방송 일정 확인</div></div></div>
+<div class="quick" onclick="window.location.href='./notice/index.html'"><div><div class="qt">공지사항</div><div class="qs">하늘이의 공지 확인</div></div></div>
+<div id="skyDressingCTA" class="quick" onclick="window.location.href='./dressing-room/index.html'; return false;"><div><div class="qt">의상 목록</div><div class="qs" onclick="window.location.href='./dressing-room/index.html'">의상 모아보기</div></div></div>
+<div class="quick" id="skyUpboCTA" onclick="window.location.href='./upbo/index.html'; return false;"><div><div class="qt">업보 목록</div><div class="qs">업보 모아보기</div></div></div>
+</section>
+
+<section class="content">
+<div class="card weekly-calendar-card" id="calendar">
+<div class="calendar-top">
+  <div>
+    <h2>하늘이의 주간 일정표</h2>
+    <p>일정을 확인하고 관리자만 수정할 수 있습니다.</p>
+  </div>
+  <div class="calendar-actions">
+    <button class="cal-btn" onclick="week(-1)">‹</button>
+    <button class="cal-btn today-btn" onclick="wOff=0;renderWeek()">오늘</button>
+    <button class="cal-btn" onclick="week(1)">›</button>
+  </div>
+</div>
+<div class="week-caption-row">
+  <div class="week-caption" id="weekTitle"></div>
+  <div class="category-legend">
+    <span><i class="dot broadcast"></i>방송</span>
+    <span><i class="dot game"></i>게임</span>
+    <span><i class="dot talk"></i>소통</span>
+    <span><i class="dot break"></i>휴방</span>
+    <span><i class="dot etc"></i>기타</span>
+  </div>
+</div>
+<div class="calendar-scroll"><div id="weekView"></div></div>
+</div>
+
+<div class="card" id="notice">
+<div class="section-head"><div class="title notice-title">공지사항</div><button class="more-btn" onclick="window.location.href='./notice/index.html'">더보기</button></div>
+<ul class="notice" id="profileNoticeList"></ul>
+</div>
+
+
+</section>
+
+<section class="shortcut-box"><h3>바로가기</h3><div class="shortcut-grid">
+<div class="shortcut" onclick="window.open('https://www.sooplive.com/station/gaksky2','_blank')">
+<img src="assets/soop.png" alt="SOOP"><span>SOOP 방송국</span>
+</div>
+<div class="shortcut youtube-shortcut" onclick="window.open('https://www.youtube.com/@GAK_SKY2','_blank')">
+<img class="youtube-icon" src="assets/youtube.png" alt="YouTube"><span>유튜브</span>
+</div>
+<div class="shortcut" onclick="window.open('https://fancim.me/celeb/profile.aspx?cu_id=n_grklrYynz/VbMONfbPkLKA==','_blank')">
+<img src="assets/fansim.jpg" alt="팬심"><span>팬심</span>
+</div>
+<div class="shortcut" onclick="window.open('https://weflab.com/user/lOPU2suYkmht','_blank')">
+<img src="assets/roulette.png" alt="룰렛확률"><span>룰렛확률</span>
+</div>
+</div></section>
+<footer>© 2026 각하늘 - DAY. All rights reserved.</footer>
+</main>
+
+<div class="modal-bg" id="modal">
+<div class="modal small"><h2 id="modalTitle"></h2><div id="modalText" class="meta"></div><div class="actions"><button class="btn" onclick="closeModal()">닫기</button></div></div>
+</div>
+
+<div class="modal-bg" id="adminModal">
+<div class="modal">
+<div class="head"><h2>관리자 모드 · 공유 캘린더</h2><button class="icon" onclick="closeAdmin()">×</button></div>
+<div id="login">
+<div class="field"><label>관리자 비밀번호</label><input id="pw" type="password" placeholder="비밀번호"></div>
+<div class="actions"><button class="btn" onclick="login()">로그인</button></div>
+
+</div>
+<div id="editor" style="display:none">
+<div class="fields">
+<div class="field"><label>시작 날짜</label><input id="date" type="date"></div>
+<div class="field"><label>종료 날짜</label><input id="endDate" type="date"></div>
+<div class="field"><label>시작 시간</label><input id="time" type="time"></div>
+<div class="field"><label>종료 시간</label><input id="endTime" type="time"></div>
+<div class="field"><label>카테고리</label><select id="cat"><option value="broadcast">방송</option><option value="game">게임</option><option value="talk">소통</option><option value="break">휴방</option><option value="etc">기타</option></select></div>
+<div class="field"><label>제목</label><input id="title" placeholder="예: 게임 방송"></div>
+<div class="field full"><label>상세 내용</label><textarea id="detail"></textarea></div>
+</div>
+<div class="actions"><button class="btn" onclick="addEvent()">일정 추가</button><button class="btn secondary" onclick="clearForm()">초기화</button><button class="btn secondary" onclick="logout()">로그아웃</button></div>
+<div class="meta" id="status">추가/삭제된 일정은 주간 일정표에 반영됩니다.</div>
+<div class="admin-list" id="adminList"></div>
+</div>
+</div>
+</div>
+
+<!-- SKY-DAY FORCE ADMIN PASSWORD V2 -->
+
+<!-- SKY-DAY RENDER + POSTGRESQL SYNC V1 -->
+<script>
+(function(){
+  var KEYS = ["gaksky_calendar_shared_v1", "skyCalendarEvents", "sky_notice_data", "skyDresses", "skyUpboItems"];
+  var API = '/api/data/';
+  var PASSWORD = 'soopgodsky221010><';
+
+  // Load the latest shared data before each page's existing scripts run.
+  KEYS.forEach(function(key){
+    try {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', API + encodeURIComponent(key), false);
+      xhr.send(null);
+      if (xhr.status === 200) {
+        var result = JSON.parse(xhr.responseText);
+        if (result && result.exists) {
+          localStorage.setItem(key, JSON.stringify(result.value));
+        }
+      }
+    } catch (e) {
+      // If the server is temporarily unavailable, keep the existing local data.
+    }
+  });
+
+  // Keep the existing pages unchanged: intercept only their existing data saves
+  // and mirror them to PostgreSQL.
+  var originalSetItem = Storage.prototype.setItem;
+  Storage.prototype.setItem = function(key, value){
+    originalSetItem.call(this, key, value);
+
+    if (this !== localStorage || KEYS.indexOf(key) === -1) return;
+
+    // Existing pages already require admin mode before editing.
+    // Only administrator saves are sent to the shared database.
+    if (localStorage.getItem('sky_day_shared_admin') !== '1') return;
+
+    try {
+      var xhr = new XMLHttpRequest();
+      xhr.open('PUT', API + encodeURIComponent(key), true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.setRequestHeader('x-admin-password', PASSWORD);
+      xhr.send(JSON.stringify({ value: JSON.parse(value) }));
+    } catch (e) {
+      console.warn('공용 저장에 실패했습니다.', e);
+    }
+  };
+
+  // Other open pages refresh when a shared update is announced.
+  setInterval(function(){
+    KEYS.forEach(function(key){
+      try {
+        fetch(API + encodeURIComponent(key), { cache:'no-store' })
+          .then(function(r){ return r.ok ? r.json() : null; })
+          .then(function(result){
+            if (!result || !result.exists) return;
+            var next = JSON.stringify(result.value);
+            if (localStorage.getItem(key) !== next) {
+              originalSetItem.call(localStorage, key, next);
+              window.dispatchEvent(new StorageEvent('storage', {
+                key:key, newValue:next, storageArea:localStorage
+              }));
+            }
+          })
+          .catch(function(){});
+      } catch(e) {}
+    });
+  }, 10000);
+})();
+</script>
+
+<script>
+(function(){
+  var PASSWORD='soopgodsky221010><';
+  var KEYS=['sky_day_shared_admin_password_v1', 'skyCalAdminPassword', 'sky_notice_password', 'skyDressPassword', 'skyUpboPassword', 'gaksky_admin_password', 'admin_password', 'adminPassword'];
+  KEYS.forEach(function(k){ localStorage.setItem(k,PASSWORD); });
+
+  window.__SKY_DAY_ADMIN_PASSWORD__=function(){ return 'soopgodsky221010><'; };
+  window.SKY_DAY_ADMIN_PASSWORD=PASSWORD;
+})();
+</script>
+
+<script>
+const KEY="gaksky_calendar_shared_v1",SESSION="sky_day_shared_admin";
+let wOff=0;
+
+function toggleNav(){document.getElementById("nav").classList.toggle("show")}
+document.addEventListener("click",e=>{if(!e.target.closest("#nav")&&!e.target.closest(".header-actions"))document.getElementById("nav").classList.remove("show")});
+function toggleTheme(){document.body.classList.toggle("dark");localStorage.dark=document.body.classList.contains("dark")?"1":"0";document.getElementById('sky-day-theme').textContent=document.body.classList.contains("dark")?"☾":"☼"}
+if(localStorage.dark==="1"){document.body.classList.add("dark");document.getElementById('sky-day-theme').textContent="☾"}
+
+function events(){try{return JSON.parse(localStorage.getItem(KEY)||"[]")}catch{return[]}}
+function save(a){localStorage.setItem(KEY,JSON.stringify(a))}
+function id(){return Date.now()+"_"+Math.random().toString(36).slice(2)}
+function D(s){let [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)}
+function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function overlap(e,d){return d>=D(e.date)&&d<=D(e.endDate||e.date)}
+function list(d){return events().filter(e=>overlap(e,d)).sort((a,b)=>(a.time||"").localeCompare(b.time||""))}
+function monday(d){let x=new Date(d),n=x.getDay();x.setDate(x.getDate()+(n===0?-6:1-n));return x}
+function fdate(d){return d.getFullYear()+"년 "+(d.getMonth()+1)+"월 "+d.getDate()+"일"}
+
+function renderWeek(){
+let start=monday(new Date);start.setDate(start.getDate()+wOff*7);
+document.getElementById("weekTitle").textContent=fdate(start)+" ~ "+fdate(new Date(start.getFullYear(),start.getMonth(),start.getDate()+6));
+let names=["월","화","수","목","금","토","일"],out='<div class="screenshot-week">';
+for(let i=0;i<7;i++){
+  let d=new Date(start);d.setDate(start.getDate()+i);
+  out+='<div class="week-column"><div class="week-header"><div class="dow">'+names[i]+'</div><div class="date">'+(d.getMonth()+1)+'월 '+d.getDate()+'일</div></div>';
+  let a=list(d);
+  if(!a.length) out+='<div class="empty-day">일정 없음</div>';
+  a.forEach(e=>{
+    let time=(e.time||"")+(e.endTime?" ~ "+e.endTime:"");
+    out+='<div class="screenshot-event '+e.cat+'" title="'+esc(e.detail||"")+'">'+
+      (time?'<b>'+esc(time)+'</b> ':'')+esc(e.title)+'</div>';
+  });
+  out+='</div>';
+}
+out+='</div>';
+document.getElementById("weekView").innerHTML=out;
+}
+function week(n){wOff+=n;renderWeek()}
+
+
+
+function openAdmin(){document.getElementById("adminModal").classList.add("show");if(localStorage[SESSION]==="1")showEditor()}
+function closeAdmin(){document.getElementById("adminModal").classList.remove("show")}
+function login(){if(document.getElementById("pw").value===window.__SKY_DAY_ADMIN_PASSWORD__()){localStorage[SESSION]="1";showEditor()}else alert("비밀번호가 올바르지 않습니다.")}
+function logout(){delete localStorage[SESSION];document.getElementById("editor").style.display="none";document.getElementById("login").style.display="block"}
+function showEditor(){document.getElementById("login").style.display="none";document.getElementById("editor").style.display="block";adminList()}
+function clearForm(){["date","endDate","time","endTime","title","detail"].forEach(x=>document.getElementById(x).value="");document.getElementById("cat").value="talk"}
+function addEvent(){
+let date=document.getElementById("date").value,end=document.getElementById("endDate").value||date,title=document.getElementById("title").value.trim();
+if(!date||!title)return alert("시작 날짜와 제목을 입력해주세요.");
+if(D(end)<D(date))return alert("종료 날짜가 시작 날짜보다 빠릅니다.");
+let a=events();a.push({id:id(),date,endDate:end,time:document.getElementById("time").value,endTime:document.getElementById("endTime").value,cat:document.getElementById("cat").value,title,detail:document.getElementById("detail").value});save(a);clearForm();renderWeek();adminList();document.getElementById("status").textContent="일정이 주간에 동시에 반영되었습니다."}
+function del(idv){save(events().filter(e=>e.id!==idv));renderWeek();adminList()}
+function adminList(){let a=events().sort((x,y)=>(x.date+x.time).localeCompare(y.date+y.time));document.getElementById("adminList").innerHTML=a.length?a.map(e=>'<div class="admin-item"><div><b>'+esc(e.title)+'</b><div class="meta">'+esc(e.date)+(e.endDate!==e.date?" ~ "+esc(e.endDate):"")+" · "+esc(e.time||"")+'</div></div><button class="btn danger" style="width:auto;margin:0" onclick="del(\''+e.id+'\')">삭제</button></div>').join(""):'<div class="meta">등록된 일정이 없습니다.</div>'}
+
+function showText(t,c){document.getElementById("modalTitle").textContent=t;document.getElementById("modalText").textContent=c;document.getElementById("modal").classList.add("show")}
+function closeModal(){document.getElementById("modal").classList.remove("show")}
+function updateDDay(){let t=new Date,y=t.getFullYear(),b=new Date(y,1,4);if(b<t)b=new Date(y+1,1,4);document.getElementById("dday").textContent="D-DAY "+Math.ceil((b-t)/86400000)+"일";document.getElementById("days").textContent=Math.floor((t-new Date(2022,9,10))/86400000)+"일째"}
+updateDDay();renderWeek();
+</script>
+<!-- SKY-DAY DRESSING CTA VERIFIED -->
+<script>
+(function(){
+  var card = document.getElementById('skyDressingCTA');
+  if(!card) return;
+  card.style.cursor = 'pointer';
+  card.addEventListener('click', function(e){
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    window.location.href = './dressing-room/index.html';
+    return false;
+  }, true);
+})();
+</script>
+
+
+<!-- SKY-DAY UPBO CTA VERIFIED -->
+<script>
+(function(){
+  var card = document.getElementById('skyUpboCTA');
+  if(!card) return;
+
+  card.style.cursor = 'pointer';
+
+  card.addEventListener('click', function(e){
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    window.location.href = './upbo/index.html';
+    return false;
+  }, true);
+})();
+</script>
+
+<!-- SKY-DAY PROFILE SINGLE THEME FIX V5 -->
+<script>
+(function(){
+  var SHARED='sky-day-shared-theme';
+  function valid(v){ return v==='dark' || v==='light'; }
+  function getMode(){
+    var v=localStorage.getItem(SHARED);
+    return valid(v) ? v : 'light';
+  }
+  function saveMode(v){
+    v=valid(v) ? v : 'light';
+    localStorage.setItem(SHARED,v);
+    return v;
+  }
+  function render(v){
+    v=valid(v) ? v : 'light';
+    document.body.classList.toggle('dark',v==='dark');
+
+    var btn=document.getElementById('sky-day-theme');
+    if(btn){
+      btn.textContent=v==='dark' ? '☾' : '☼';
+      btn.title=v==='dark' ? '라이트모드' : '다크모드';
+      btn.setAttribute('aria-label',btn.title);
+    }
+
+    // Keep the old profile value consistent too, but never use it as the source.
+    localStorage.setItem('dark',v==='dark' ? '1' : '0');
+  }
+
+  // First-ever use is light.
+  if(!valid(localStorage.getItem(SHARED))) saveMode('light');
+
+  // Replace the profile's original inline onclick function.
+  // This prevents two different toggle handlers from fighting each other.
+  window.toggleTheme=function(){
+    var next=getMode()==='dark' ? 'light' : 'dark';
+    saveMode(next);
+    render(next);
+  };
+
+  document.addEventListener('DOMContentLoaded',function(){
+    render(getMode());
+
+    // Make sure the actual profile button has only the single handler above.
+    var btn=document.getElementById('sky-day-theme');
+    if(btn){
+      btn.onclick=window.toggleTheme;
+    }
+  });
+
+  // When returning from another page, always use the shared value.
+  window.addEventListener('pageshow',function(){
+    render(getMode());
+  });
+
+  // Live sync if another same-origin page changes the shared mode.
+  window.addEventListener('storage',function(e){
+    if(e.key===SHARED && valid(e.newValue)) render(e.newValue);
+  });
+})();
+</script>
+
+
+<!-- SKY-DAY PROFILE NOTICE SYNC V1 -->
+<script>
+(function(){
+  var NOTICE_KEY='sky_notice_data';
+  var DEFAULT_NOTICES=[
+    {id:'n1',title:'공지사항 이용 안내',date:'2026-08-21',pinned:true,content:'공지사항 페이지입니다.'},
+    {id:'n2',title:'방송 관련 안내',date:'2026-08-20',pinned:false,content:'방송 일정과 관련된 안내입니다.'},
+    {id:'n3',title:'방송 일정 안내',date:'2026-08-19',pinned:false,content:'일정은 상황에 따라 변경될 수 있습니다.'}
+  ];
+
+  function escapeHtml(text){
+    return String(text||'').replace(/[&<>"']/g,function(ch){
+      return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];
+    });
+  }
+
+  function getNotices(){
+    try{
+      var saved=JSON.parse(localStorage.getItem(NOTICE_KEY)||'null');
+      return Array.isArray(saved) ? saved : DEFAULT_NOTICES;
+    }catch(e){
+      return DEFAULT_NOTICES;
+    }
+  }
+
+  function renderProfileNotices(){
+    var list=document.getElementById('profileNoticeList');
+    if(!list) return;
+
+    var notices=getNotices()
+      .slice()
+      .sort(function(a,b){
+        var pin=(b.pinned?1:0)-(a.pinned?1:0);
+        if(pin) return pin;
+        return String(b.date||'').localeCompare(String(a.date||''));
+      })
+      .slice(0,3);
+
+    if(!notices.length){
+      list.innerHTML='<li><span class="badge">공지</span>등록된 공지사항이 없습니다.</li>';
+      return;
+    }
+
+    list.innerHTML=notices.map(function(n){
+      return '<li><span class="badge">'+(n.pinned?'공지':'안내')+'</span>'+escapeHtml(n.title)+'</li>';
+    }).join('');
+  }
+
+  document.addEventListener('DOMContentLoaded',renderProfileNotices);
+  window.addEventListener('pageshow',renderProfileNotices);
+
+  // 다른 페이지 탭에서 공지를 수정했을 때도 바로 반영
+  window.addEventListener('storage',function(e){
+    if(e.key===NOTICE_KEY) renderProfileNotices();
+  });
+})();
+</script>
+
+
+<!-- SKY-DAY COMMON ADMIN MODE V1 -->
+<script>
+(function(){
+  var KEY='sky_day_shared_admin';
+
+  function isAdmin(){
+    return localStorage.getItem(KEY)==='1';
+  }
+
+  // If another page logs in/out while this page is open, refresh the page's own
+  // existing admin UI without changing its design or management functions.
+  window.addEventListener('storage',function(e){
+    if(e.key===KEY) window.location.reload();
+  });
+
+  window.addEventListener('pageshow',function(){
+    // Existing pages keep their own show/hide logic. A reload is only needed when
+    // a bfcache-restored page has stale admin UI after navigating from another page.
+    if(performance && performance.getEntriesByType){
+      var nav=performance.getEntriesByType('navigation')[0];
+      if(nav && nav.type==='back_forward') window.location.reload();
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

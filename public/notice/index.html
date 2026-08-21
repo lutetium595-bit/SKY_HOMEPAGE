@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SKY | 공지사항</title>
+<style>
+:root{
+  --bg:#eef6ff;
+  --card:rgba(255,255,255,.82);
+  --text:#24364d;
+  --sub:#718198;
+  --line:#dbe7f3;
+  --accent:#78a9dc;
+  --accent2:#a9c9eb;
+  --shadow:0 18px 45px rgba(65,103,145,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:"Pretendard","Noto Sans KR",Arial,sans-serif;
+  color:var(--text);
+  background:linear-gradient(145deg,#edf6ff 0%,#f8fbff 52%,#eaf3fc 100%);
+}
+body.dark{
+  --bg:#101925;
+  --card:rgba(25,36,52,.96);
+  --text:#edf4fc;
+  --sub:#9eacc0;
+  --line:#34445b;
+  --accent:#8db8e8;
+  --accent2:#5d7fa6;
+  --shadow:0 18px 45px rgba(0,0,0,.28);
+  background:linear-gradient(145deg,#101925,#172335);
+}
+.site-header{
+  position:relative;
+  z-index:1000;
+  width:100%;
+  height:64px;
+  display:flex;
+  align-items:center;
+  padding:0 18px;
+  background:rgba(255,255,255,.82);
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(14px);
+}
+.dark .site-header{background:rgba(18,28,42,.9)}
+.logo{
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:2px;
+}
+.header-actions{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.icon-btn{
+  width:38px;height:38px;
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:var(--card);
+  color:var(--text);
+  cursor:pointer;
+  font-size:17px;
+}
+.menu{
+  position:absolute;
+  top:57px;
+  right:14px;
+  width:190px;
+  padding:8px;
+  display:none;
+  flex-direction:column;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:15px;
+  box-shadow:var(--shadow);
+}
+.dark .menu{background:#202c40}
+.menu.show{display:flex}
+.menu a{
+  padding:12px 14px;
+  border-radius:10px;
+  color:var(--text);
+  text-decoration:none;
+  font-size:14px;
+}
+.menu a:hover{background:rgba(120,169,220,.12)}
+.wrap{
+  width:min(920px,calc(100% - 30px));
+  margin:0 auto;
+  padding:48px 0 70px;
+}
+.hero{text-align:center;margin-bottom:30px}
+.hero .eyebrow{
+  font-size:11px;
+  letter-spacing:4px;
+  color:var(--accent);
+  font-weight:800;
+}
+.hero h1{margin:8px 0 6px;font-size:30px}
+.hero p{margin:0;color:var(--sub);font-size:14px}
+.notice-list{display:flex;flex-direction:column;gap:13px}
+.notice{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  backdrop-filter:blur(10px);
+}
+.notice-head{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:var(--text);
+  padding:19px 20px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-align:left;
+  cursor:pointer;
+}
+.pin{
+  flex:0 0 auto;
+  padding:4px 7px;
+  border-radius:7px;
+  background:rgba(120,169,220,.15);
+  color:var(--accent);
+  font-size:11px;
+  font-weight:800;
+}
+.title{font-size:15px;font-weight:700;flex:1}
+.date{font-size:12px;color:var(--sub);white-space:nowrap}
+.arrow{font-size:12px;color:var(--sub);transition:.2s}
+.notice.open .arrow{transform:rotate(180deg)}
+.notice-body{
+  display:none;
+  padding:0 20px 20px;
+  border-top:1px solid var(--line);
+}
+.notice.open .notice-body{display:block}
+.notice-body p{
+  margin:18px 0 0;
+  font-size:14px;
+  line-height:1.8;
+  color:var(--text);
+  white-space:pre-line;
+}
+.empty{
+  padding:50px 20px;
+  text-align:center;
+  color:var(--sub);
+  background:var(--card);
+  border:1px dashed var(--line);
+  border-radius:18px;
+}
+.footer{
+  margin-top:38px;
+  text-align:center;
+  color:var(--sub);
+  font-size:11px;
+}
+@media(max-width:600px){
+  .site-header{height:58px;padding:0 11px}
+  .logo{font-size:19px}
+  .icon-btn{width:35px;height:35px}
+  .menu{top:52px;right:9px;width:175px}
+  .wrap{width:min(100% - 20px,920px);padding-top:34px}
+  .hero h1{font-size:25px}
+  .notice-head{padding:16px 14px;gap:8px}
+  .title{font-size:14px}
+  .date{font-size:11px}
+  .notice-body{padding:0 14px 16px}
+}
+
+.admin-login,.admin-panel{
+  display:none;
+  margin-top:20px;
+  padding:20px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+}
+.admin-login.show,.admin-panel.show{display:block}
+.admin-title{font-size:16px;font-weight:800;margin:0 0 14px}
+.admin-form{display:grid;gap:10px}
+.admin-form input,.admin-form textarea,.admin-form select{
+  width:100%;padding:11px 12px;border:1px solid var(--line);
+  border-radius:10px;background:transparent;color:var(--text);
+  font:inherit;outline:none;
+}
+.admin-form textarea{min-height:120px;resize:vertical}
+.admin-actions{display:flex;gap:8px;flex-wrap:wrap}
+.admin-btn{
+  border:0;border-radius:10px;padding:10px 14px;cursor:pointer;
+  background:var(--accent);color:white;font-weight:700;
+}
+.admin-btn.secondary{background:rgba(120,169,220,.15);color:var(--text)}
+.admin-btn.danger{background:#d96d78}
+.admin-list{display:grid;gap:8px;margin-top:15px}
+.admin-item{
+  display:flex;align-items:center;gap:8px;padding:10px;
+  border:1px solid var(--line);border-radius:10px;
+}
+.admin-item-title{flex:1;font-size:13px}
+.notice-actions{display:flex;gap:6px;margin-left:auto}
+.notice-actions button{
+  border:1px solid var(--line);background:transparent;color:var(--text);
+  border-radius:7px;padding:5px 8px;cursor:pointer;font-size:11px
+}
+.notice-actions .delete{color:#d96d78}
+.admin-badge{
+  display:inline-block;padding:4px 8px;border-radius:7px;
+  background:rgba(120,169,220,.15);color:var(--accent);font-size:11px;
+  margin-bottom:10px
+}
+
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="logo">SKY</div>
+  <div class="header-actions">
+    <button class="icon-btn" id="themeBtn" aria-label="다크모드">☼</button>
+    <button class="icon-btn" id="menuBtn" aria-label="메뉴">☰</button>
+    <button class="icon-btn" id="adminBtn" aria-label="관리자">⚙</button>
+  </div>
+
+  <nav class="menu" id="menu">
+    <a href="../index.html">프로필</a>
+    <a href="../calendar/index.html">캘린더</a>
+    <a href="../dressing-room/index.html">의상목록</a>
+    <a href="../upbo/index.html">업보목록</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow">NOTICE</div>
+    <h1>공지사항</h1>
+    <p>방송 및 사이트와 관련된 공지사항을 확인할 수 있습니다.</p>
+  </section>
+
+  <section class="notice-list" id="noticeList"></section>
+
+  
+<section class="admin-login" id="adminLogin">
+  <div class="admin-title">관리자 로그인</div>
+  <div class="admin-form">
+    <input id="adminPassword" type="password" placeholder="관리자 비밀번호">
+    <div class="admin-actions">
+      <button class="admin-btn" id="loginAdminBtn">로그인</button>
+      <button class="admin-btn secondary" id="closeAdminLogin">닫기</button>
+    </div>
+  </div>
+</section>
+
+<section class="admin-panel" id="adminPanel">
+  <span class="admin-badge">ADMIN MODE</span>
+  <div class="admin-title" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+    <span>공지사항 관리</span>
+    <label style="font-size:13px;font-weight:500;display:flex;align-items:center;gap:5px;cursor:pointer;">
+      <input id="noticePinned" type="checkbox"> 중요 공지로 고정
+    </label>
+  </div>
+
+  <form class="admin-form" id="noticeForm">
+    <input id="noticeTitle" placeholder="공지 제목" required>
+    <input id="noticeDate" type="date" required>
+    <textarea id="noticeContent" placeholder="공지 내용을 입력하세요" required></textarea>
+    <div class="admin-actions">
+      <button class="admin-btn" type="submit" id="saveNoticeBtn">공지 추가</button>
+      <button class="admin-btn secondary" type="button" id="cancelEditBtn">취소</button>
+      <button class="admin-btn secondary" type="button" id="logoutAdminBtn">로그아웃</button>
+    </div>
+  </form>
+
+  <div class="admin-list" id="adminList"></div>
+</section>
+
+<div class="footer">© 2026 SKY - DAY</div>
+</main>
+
+<!-- SKY-DAY FORCE ADMIN PASSWORD V2 -->
+
+<!-- SKY-DAY RENDER + POSTGRESQL SYNC V1 -->
+<script>
+(function(){
+  var KEYS = ["gaksky_calendar_shared_v1", "skyCalendarEvents", "sky_notice_data", "skyDresses", "skyUpboItems"];
+  var API = '/api/data/';
+  var PASSWORD = 'soopgodsky221010><';
+
+  // Load the latest shared data before each page's existing scripts run.
+  KEYS.forEach(function(key){
+    try {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', API + encodeURIComponent(key), false);
+      xhr.send(null);
+      if (xhr.status === 200) {
+        var result = JSON.parse(xhr.responseText);
+        if (result && result.exists) {
+          localStorage.setItem(key, JSON.stringify(result.value));
+        }
+      }
+    } catch (e) {
+      // If the server is temporarily unavailable, keep the existing local data.
+    }
+  });
+
+  // Keep the existing pages unchanged: intercept only their existing data saves
+  // and mirror them to PostgreSQL.
+  var originalSetItem = Storage.prototype.setItem;
+  Storage.prototype.setItem = function(key, value){
+    originalSetItem.call(this, key, value);
+
+    if (this !== localStorage || KEYS.indexOf(key) === -1) return;
+
+    // Existing pages already require admin mode before editing.
+    // Only administrator saves are sent to the shared database.
+    if (localStorage.getItem('sky_day_shared_admin') !== '1') return;
+
+    try {
+      var xhr = new XMLHttpRequest();
+      xhr.open('PUT', API + encodeURIComponent(key), true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.setRequestHeader('x-admin-password', PASSWORD);
+      xhr.send(JSON.stringify({ value: JSON.parse(value) }));
+    } catch (e) {
+      console.warn('공용 저장에 실패했습니다.', e);
+    }
+  };
+
+  // Other open pages refresh when a shared update is announced.
+  setInterval(function(){
+    KEYS.forEach(function(key){
+      try {
+        fetch(API + encodeURIComponent(key), { cache:'no-store' })
+          .then(function(r){ return r.ok ? r.json() : null; })
+          .then(function(result){
+            if (!result || !result.exists) return;
+            var next = JSON.stringify(result.value);
+            if (localStorage.getItem(key) !== next) {
+              originalSetItem.call(localStorage, key, next);
+              window.dispatchEvent(new StorageEvent('storage', {
+                key:key, newValue:next, storageArea:localStorage
+              }));
+            }
+          })
+          .catch(function(){});
+      } catch(e) {}
+    });
+  }, 10000);
+})();
+</script>
+
+<script>
+(function(){
+  var PASSWORD='soopgodsky221010><';
+  var KEYS=['sky_day_shared_admin_password_v1', 'skyCalAdminPassword', 'sky_notice_password', 'skyDressPassword', 'skyUpboPassword', 'gaksky_admin_password', 'admin_password', 'adminPassword'];
+  KEYS.forEach(function(k){ localStorage.setItem(k,PASSWORD); });
+
+  window.__SKY_DAY_ADMIN_PASSWORD__=function(){ return 'soopgodsky221010><'; };
+  window.SKY_DAY_ADMIN_PASSWORD=PASSWORD;
+})();
+</script>
+
+<script>
+const body=document.body;
+const themeBtn=document.getElementById("themeBtn");
+const menuBtn=document.getElementById("menuBtn");
+const menu=document.getElementById("menu");
+
+if(localStorage.getItem("sky-theme")==="dark"){
+  body.classList.add("dark");
+  themeBtn.textContent="☾";
+}
+themeBtn.addEventListener("click",()=>{
+  body.classList.toggle("dark");
+  const dark=body.classList.contains("dark");
+  themeBtn.textContent=dark?"☾":"☼";
+  localStorage.setItem("sky-theme",dark?"dark":"light");
+});
+menuBtn.addEventListener("click",()=>{
+  menu.classList.toggle("show");
+});
+document.addEventListener("click",(e)=>{
+  if(!menu.contains(e.target) && !menuBtn.contains(e.target)) menu.classList.remove("show");
+});
+
+const adminBtn=document.getElementById("adminBtn");
+const adminLogin=document.getElementById("adminLogin");
+const adminPanel=document.getElementById("adminPanel");
+const adminPassword=document.getElementById("adminPassword");
+const loginAdminBtn=document.getElementById("loginAdminBtn");
+const closeAdminLogin=document.getElementById("closeAdminLogin");
+const logoutAdminBtn=document.getElementById("logoutAdminBtn");
+const noticeForm=document.getElementById("noticeForm");
+const adminList=document.getElementById("adminList");
+const noticeList=document.getElementById("noticeList");
+const cancelEditBtn=document.getElementById("cancelEditBtn");
+const saveNoticeBtn=document.getElementById("saveNoticeBtn");
+
+const ADMIN_KEY="sky_day_shared_admin";
+const NOTICE_KEY="sky_notice_data";
+const DEFAULT_NOTICES=[
+ {id:"n1",title:"공지사항 이용 안내",date:"2026-08-21",pinned:true,content:"공지사항 페이지입니다.\n\n방송 일정이나 중요한 안내사항이 있을 경우 이곳에 등록할 수 있습니다."},
+ {id:"n2",title:"방송 관련 공지",date:"2026-08-20",pinned:false,content:"방송과 관련된 안내사항을 작성하는 공간입니다."},
+ {id:"n3",title:"사이트 이용 안내",date:"2026-08-19",pinned:false,content:"사이트 이용과 관련된 안내사항을 작성하는 공간입니다."}
+];
+let notices=JSON.parse(localStorage.getItem(NOTICE_KEY)||"null")||DEFAULT_NOTICES;
+let editId=null;
+
+function saveData(){
+  localStorage.setItem(NOTICE_KEY,JSON.stringify(notices));
+}
+function renderNotices(){
+  notices.sort((a,b)=>(b.pinned-a.pinned)||b.date.localeCompare(a.date));
+  noticeList.innerHTML=notices.map(n=>`
+    <article class="notice ${n.pinned?'open':''}">
+      <button class="notice-head" type="button">
+        ${n.pinned?'<span class="pin">NOTICE</span>':''}
+        <span class="title">${escapeHtml(n.title)}</span>
+        <span class="date">${n.date.replaceAll("-",".")}</span>
+        <span class="arrow">▼</span>
+      </button>
+      <div class="notice-body"><p>${escapeHtml(n.content)}</p></div>
+    </article>`).join("");
+  renderAdminList();
+}
+function renderAdminList(){
+  adminList.innerHTML=notices.map(n=>`
+    <div class="admin-item">
+      <span class="admin-item-title">${n.pinned?'📌 ':''}${escapeHtml(n.title)}</span>
+      <span class="date">${n.date.replaceAll("-",".")}</span>
+      <div class="notice-actions">
+        <button data-edit="${n.id}">수정</button>
+        <button class="delete" data-delete="${n.id}">삭제</button>
+      </div>
+    </div>`).join("");
+  adminList.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>editNotice(b.dataset.edit));
+  adminList.querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>deleteNotice(b.dataset.delete));
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+function openAdmin(){
+  if(localStorage.getItem(ADMIN_KEY)==="1"){
+    adminPanel.classList.add("show"); adminLogin.classList.remove("show");
+  }else{
+    adminLogin.classList.add("show"); adminPanel.classList.remove("show");
+  }
+}
+adminBtn.onclick=openAdmin;
+closeAdminLogin.onclick=()=>adminLogin.classList.remove("show");
+loginAdminBtn.onclick=()=>{
+  /* 초기 비밀번호: 1234 - 실제 사이트에서는 서버 인증으로 교체해야 합니다. */
+  if(adminPassword.value===window.__SKY_DAY_ADMIN_PASSWORD__()){
+    localStorage.setItem(ADMIN_KEY,"1");
+    adminPassword.value="";
+    adminLogin.classList.remove("show");
+    adminPanel.classList.add("show");
+  }else alert("비밀번호가 올바르지 않습니다.");
+};
+logoutAdminBtn.onclick=()=>{
+  localStorage.removeItem(ADMIN_KEY);
+  adminPanel.classList.remove("show");
+};
+noticeForm.onsubmit=e=>{
+  e.preventDefault();
+  const data={
+    id:editId||("n"+Date.now()),
+    title:noticeTitle.value.trim(),
+    date:noticeDate.value,
+    pinned:noticePinned.checked,
+    content:noticeContent.value.trim()
+  };
+  if(editId) notices=notices.map(n=>n.id===editId?data:n);
+  else notices.push(data);
+  saveData(); renderNotices(); resetForm();
+};
+function editNotice(id){
+  const n=notices.find(x=>x.id===id); if(!n)return;
+  editId=id; noticeTitle.value=n.title; noticeDate.value=n.date;
+  noticePinned.checked=n.pinned; noticeContent.value=n.content;
+  saveNoticeBtn.textContent="공지 수정";
+  window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+}
+function deleteNotice(id){
+  if(!confirm("이 공지사항을 삭제할까요?"))return;
+  notices=notices.filter(n=>n.id!==id); saveData(); renderNotices();
+}
+function resetForm(){
+  editId=null; noticeForm.reset(); saveNoticeBtn.textContent="공지 추가";
+}
+cancelEditBtn.onclick=resetForm;
+renderNotices();
+</script>
+
+<!-- SKY-DAY SHARED THEME SYNC FINAL -->
+<script>
+(function(){
+  var KEY = 'SKY_DAY_GLOBAL_THEME';
+
+  function getTheme(){
+    return localStorage.getItem(KEY) === 'dark' ? 'dark' : 'light';
+  }
+
+  function apply(theme){
+    var isDark = theme === 'dark';
+    if (document.body) document.body.classList.toggle('dark', isDark);
+
+    var btn = document.getElementById('themeBtn');
+    if(btn){
+      btn.textContent = isDark ? '☾' : '☼';
+      btn.title = isDark ? '라이트모드' : '다크모드';
+      btn.setAttribute('aria-label', btn.title);
+    }
+  }
+
+  function setTheme(theme){
+    localStorage.setItem(KEY, theme);
+    apply(theme);
+  }
+
+  function bind(){
+    apply(getTheme());
+
+    var btn = document.getElementById('themeBtn');
+    if(!btn || btn.dataset.sharedThemeSync === '1') return;
+    btn.dataset.sharedThemeSync = '1';
+
+    // Capture phase: run before each page's original click handler.
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      var next = document.body.classList.contains('dark') ? 'light' : 'dark';
+      setTheme(next);
+    }, true);
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', bind);
+  }else{
+    bind();
+  }
+
+  window.addEventListener('storage', function(e){
+    if(e.key === KEY) apply(getTheme());
+  });
+})();
+</script>
+<!-- SKY-DAY SHARED THEME STORAGE V3 -->
+<script>
+(function(){
+ var SHARED='sky-day-shared-theme';
+ var originalGet=Storage.prototype.getItem, originalSet=Storage.prototype.setItem;
+ var aliases=['theme','darkMode','dark-mode','mode','SKY_DAY_GLOBAL_THEME','skyTheme','sky-day-theme'];
+ function alias(k){return aliases.indexOf(String(k))!==-1||String(k)===SHARED;}
+ function valid(v){return v==='light'||v==='dark';}
+ var current=originalGet.call(localStorage,SHARED);
+ if(!valid(current)) originalSet.call(localStorage,SHARED,'light');
+
+ Storage.prototype.getItem=function(k){
+  if(alias(k)){var v=originalGet.call(this,SHARED);return valid(v)?v:'light';}
+  return originalGet.call(this,k);
+ };
+ Storage.prototype.setItem=function(k,v){
+  if(alias(k)){return originalSet.call(this,SHARED,valid(v)?v:'light');}
+  return originalSet.call(this,k,v);
+ };
+
+ function applyShared(){
+  var t=originalGet.call(localStorage,SHARED);
+  t=valid(t)?t:'light';
+  if(typeof window.setTheme==='function'){try{window.setTheme(t);return;}catch(e){}}
+  if(typeof window.apply==='function'){try{window.apply(t);return;}catch(e){}}
+ }
+ document.addEventListener('DOMContentLoaded',function(){
+  applyShared();
+  window.addEventListener('pageshow',applyShared);
+  window.addEventListener('storage',function(e){if(e.key===SHARED&&valid(e.newValue))applyShared();});
+ });
+})();
+</script>
+
+<!-- SKY-DAY NOTICE ACCORDION FIX V2 -->
+<script>
+(function(){
+  function setNoticeState(item, open){
+    if(!item) return;
+    item.classList.toggle('open', open);
+
+    var body=item.querySelector('.notice-body');
+    var arrow=item.querySelector('.arrow');
+
+    if(body) body.style.display=open ? 'block' : 'none';
+    if(arrow){
+      arrow.textContent=open ? '▲' : '▼';
+      arrow.setAttribute('aria-label', open ? '접기' : '펼치기');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    var list=document.getElementById('noticeList');
+    if(!list) return;
+
+    // Initialize the actual rendered notice cards.
+    list.querySelectorAll('article.notice').forEach(function(item){
+      setNoticeState(item, item.classList.contains('open'));
+    });
+
+    // One event handler for all current and future notices.
+    list.addEventListener('click', function(e){
+      var head=e.target.closest('button.notice-head');
+      if(!head || !list.contains(head)) return;
+
+      var item=head.closest('article.notice');
+      if(!item) return;
+
+      e.preventDefault();
+      setNoticeState(item, !item.classList.contains('open'));
+    });
+  });
+})();
+</script>
+
+
+<!-- SKY-DAY COMMON ADMIN MODE V1 -->
+<script>
+(function(){
+  var KEY='sky_day_shared_admin';
+
+  function isAdmin(){
+    return localStorage.getItem(KEY)==='1';
+  }
+
+  // If another page logs in/out while this page is open, refresh the page's own
+  // existing admin UI without changing its design or management functions.
+  window.addEventListener('storage',function(e){
+    if(e.key===KEY) window.location.reload();
+  });
+
+  window.addEventListener('pageshow',function(){
+    // Existing pages keep their own show/hide logic. A reload is only needed when
+    // a bfcache-restored page has stale admin UI after navigating from another page.
+    if(performance && performance.getEntriesByType){
+      var nav=performance.getEntriesByType('navigation')[0];
+      if(nav && nav.type==='back_forward') window.location.reload();
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
