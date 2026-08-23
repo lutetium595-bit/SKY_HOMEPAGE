@@ -15,7 +15,7 @@
 3. Build Command: npm install
 4. Start Command: npm start
 5. PostgreSQL 데이터베이스를 만들고 DATABASE_URL 환경변수 설정
-6. ADMIN_PASSWORD 환경변수를 soopgodsky221010>< 로 설정
+6. ADMIN_PASSWORD 환경변수를 로 설정
 7. 배포
 
 ## 중요
