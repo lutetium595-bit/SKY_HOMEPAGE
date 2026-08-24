@@ -14,7 +14,7 @@ header{height:64px;display:flex;align-items:center;padding:0 18px;background:rgb
 .icon{width:38px;height:38px;border:1px solid var(--line);border-radius:11px;background:var(--card);color:var(--text);cursor:pointer}.menu{display:none;position:absolute;right:14px;top:57px;width:190px;padding:8px;background:var(--card);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow)}.menu.show{display:flex;flex-direction:column}.menu a{padding:12px 14px;color:var(--text);text-decoration:none;border-radius:10px;font-size:14px}.menu a:hover{background:rgba(120,169,220,.12)}
 .wrap{width:min(1100px,calc(100% - 24px));margin:auto;padding:35px 0 65px}.hero{text-align:center;margin-bottom:24px}.eyebrow{font-size:11px;letter-spacing:4px;color:var(--accent);font-weight:800}.hero h1{margin:8px 0 5px;font-size:28px}.hero p{margin:0;color:var(--sub);font-size:13px}
 .toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}.navbuttons,.views{display:flex;gap:6px}.btn{border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 12px;border-radius:9px;cursor:pointer}.btn.active{background:var(--accent);color:white;border-color:var(--accent)}.period{font-size:17px;font-weight:800;text-align:center;flex:1}
-.calendar{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}.weekdays,.monthgrid{display:grid;grid-template-columns:repeat(7,1fr)}.weekdays div{padding:11px 4px;text-align:center;font-size:12px;color:var(--sub);border-bottom:1px solid var(--line)}.day{min-height:112px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:7px;overflow:hidden}.day:nth-child(7n){border-right:0}.muted{opacity:.38}.today .num{background:var(--accent);color:white}.num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;margin-bottom:5px}.event{font-size:11px;padding:4px 6px;border-radius:5px;margin:3px 0;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.방송{background:#78a9dc}.게임{background:#9b91d5}.소통{background:#72bda1}.휴방{background:#b9a36f}.기타{background:#8995a5}
+.calendar{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}.weekdays,.monthgrid{display:grid;grid-template-columns:repeat(7,1fr)}.weekdays div{padding:11px 4px;text-align:center;font-size:12px;color:var(--sub);border-bottom:1px solid var(--line)}.day{min-height:112px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:7px;overflow:hidden}.day:nth-child(7n){border-right:0}.muted{opacity:.38}.today .num{background:var(--accent);color:white}.num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;margin-bottom:5px}.event{font-size:11px;padding:4px 6px;border-radius:5px;margin:3px 0;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.방송{background:#78a9dc}.게임{background:#9b91d5}.소통{background:#72bda1}.휴방{background:#b9a36f}.합방{background:#8995a5}
 .weekgrid{display:grid;grid-template-columns:repeat(7,1fr)}.weekday{border-right:1px solid var(--line);min-height:430px}.weekday:last-child{border-right:0}.whead{padding:12px;text-align:center;border-bottom:1px solid var(--line);font-weight:700}.wbody{padding:8px}.weekempty{text-align:center;padding:80px 10px;color:var(--sub);font-size:13px}
 .admin{margin-top:16px;padding:18px;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.admin h3{margin:0 0 12px}.form{display:grid;grid-template-columns:1fr 1fr;gap:9px}.form input,.form select,.form textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:9px;background:transparent;color:var(--text);font:inherit}.form textarea{grid-column:1/-1;min-height:80px}.full{grid-column:1/-1}.adminrow{display:flex;gap:8px;flex-wrap:wrap}.hidden{display:none}.footer{text-align:center;color:var(--sub);font-size:11px;margin-top:35px}
 @media(max-width:700px){header{height:58px;padding:0 11px}.wrap{padding-top:25px}.hero h1{font-size:24px}.day{min-height:85px;padding:5px}.event{font-size:9px;padding:3px 4px}.num{width:23px;height:23px}.weekgrid{display:block}.weekday{min-height:auto;border-right:0;border-bottom:1px solid var(--line)}.weekday:last-child{border-bottom:0}.wbody{padding:5px}.form{grid-template-columns:1fr}.full,.form textarea{grid-column:auto}.period{order:-1;width:100%;flex-basis:100%}}
@@ -175,7 +175,7 @@ header{height:64px;display:flex;align-items:center;padding:0 18px;background:rgb
   color:#62508f !important;
   border-color:rgba(155,126,222,.72) !important;
 }
-.event.기타,.event-bar.기타{
+.event.합방,.event-bar.합방{
   background:rgba(105,181,120,.20) !important;
   color:#3d7d51 !important;
   border-color:rgba(105,181,120,.72) !important;
@@ -211,7 +211,7 @@ header{height:64px;display:flex;align-items:center;padding:0 18px;background:rgb
       <input id="date" class="admin-date-input" type="date" required aria-label="시작일">
       <input id="end" class="admin-date-input" type="date" aria-label="종료일">
       <input id="time" placeholder="시간 (예: 17:00)">
-      <select id="cat"><option>방송</option><option>게임</option><option>소통</option><option>휴방</option><option>기타</option></select>
+      <select id="cat"><option>방송</option><option>게임</option><option>소통</option><option>휴방</option><option>합방</option></select>
       <input id="title" class="full" placeholder="일정 제목" required>
       <textarea id="detail" placeholder="상세 내용"></textarea>
       <div class="adminrow full">
@@ -493,7 +493,7 @@ function editEvent(id){
   setDateValue(e.date||"");
   setEndValue(e.end||"");
   $("#time").value=e.time||"";
-  $("#cat").value=e.cat||"기타";
+  $("#cat").value=e.cat||"합방";
   $("#title").value=e.title||"";
   $("#detail").value=e.detail||"";
   $("#eventForm button[type='submit']").textContent="일정 수정";
@@ -546,7 +546,7 @@ showAdmin();render();
 
 const eventModal=$("#eventModal"),modalTitle=$("#modalTitle"),modalDate=$("#modalDate"),
 modalDetail=$("#modalDetail"),modalCat=$("#modalCat");
-const catColors={방송:"#78a9dc",게임:"#9b91d5",소통:"#72bda1",휴방:"#b9a36f",기타:"#8995a5"};
+const catColors={방송:"#78a9dc",게임:"#9b91d5",소통:"#72bda1",휴방:"#b9a36f",합방:"#8995a5"};
 
 
 let selectedEventId=null;
@@ -568,8 +568,8 @@ function openEventModal(id){
   modalTitle.textContent=e.title||"일정";
   modalDate.textContent=(e.date||"")+(e.end&&e.end!==e.date?" ~ "+e.end:"")+(e.time?" · "+e.time:"");
   modalDetail.textContent=e.detail||"상세 내용이 없습니다.";
-  modalCat.textContent=e.cat||"기타";
-  modalCat.style.background=catColors[e.cat]||catColors.기타;
+  modalCat.textContent=e.cat||"합방";
+  modalCat.style.background=catColors[e.cat]||catColors.합방;
   eventModal.classList.add("show");
 }
 function closeEventModal(){eventModal.classList.remove("show")}
@@ -588,7 +588,7 @@ modalEditBtn.onclick=()=>{
   setDateValue(e.date||"");
   setEndValue(e.end||"");
   $("#time").value=e.time||"";
-  $("#cat").value=e.cat||"기타";
+  $("#cat").value=e.cat||"합방";
   $("#title").value=e.title||"";
   $("#detail").value=e.detail||"";
   $("#eventForm button[type='submit']").textContent="일정 수정";
