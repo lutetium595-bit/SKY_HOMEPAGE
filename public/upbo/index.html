@@ -130,7 +130,7 @@ footer{text-align:center;color:var(--sub);font-size:11px;margin-top:40px}
       <div class="field"><label>SOOP User ID</label><input id="soopUserId" placeholder="SOOP 연동 시 자동 입력" readonly></div>
       <div class="field"><label>프로필 이미지 URL (선택)</label><input id="image" type="url" placeholder="직접 입력하거나 기존 이미지를 사용"></div>
       <div class="field"><label>업보 내용</label><textarea id="desc" placeholder="업보 내용을 입력하세요. 예: 노래 부르기"></textarea></div>
-      <div class="field"><label>업보 갯수</label><input id="count" type="number" min="0" value="1" placeholder="예: 1"></div>
+      <div class="field"><label>업보 갯수 <span style="font-weight:500;color:var(--sub)">· 업보 내용에서 자동 계산</span></label><input id="count" type="number" min="0" value="0" readonly></div>
       <div class="field"><label>상태</label><select id="status"><option>진행중</option><option>대기</option><option>완료</option></select></div>
       <div class="field"><label>등록 날짜</label><input id="date" type="date"></div>
       <div class="form-actions">
@@ -271,7 +271,7 @@ function render(){
    <div class="upbo-icon">${x.image?`<img src="${esc(x.image)}" alt="${esc(x.name)}" onerror="this.remove();this.parentElement.textContent='☁';">`:"☁"}</div>
    <div class="num">UPBO · ${String(items.indexOf(x)+1).padStart(2,"0")}</div>
    <div class="name">${esc(x.name)}</div>
-   <div class="upbo-count">업보 ${Number(x.count ?? 0)}</div>
+   <div class="upbo-count">업보 ${calculateUpboCount(x.desc)}</div>
  </article>`).join(""):`<div class="empty">등록된 업보가 없습니다.</div>`;
  document.querySelectorAll(".card").forEach(c=>c.onclick=()=>openDetail(c.dataset.id));
  if(localStorage.getItem("sky_day_shared_admin")==="1") renderAdmin();
@@ -289,12 +289,12 @@ function openDetail(id){
 function renderAdmin(){
  const box=$("#adminList");
  box.innerHTML=items.length?items.map(x=>`<div class="admin-item">
-   <div class="grow"><b>${esc(x.name)}</b><div style="font-size:11px;color:var(--sub);margin-top:3px">${x.soopUserId?`SOOP · ${esc(x.soopUserId)} · `:""}${esc(x.status)} · 업보 ${Number(x.count ?? 0)} · ${esc(x.desc||"내용 없음")}</div></div>
+   <div class="grow"><b>${esc(x.name)}</b><div style="font-size:11px;color:var(--sub);margin-top:3px">${x.soopUserId?`SOOP · ${esc(x.soopUserId)} · `:""}${esc(x.status)} · 업보 ${calculateUpboCount(x.desc)} · ${esc(x.desc||"내용 없음")}</div></div>
    <button class="btn small edit" data-id="${x.id}" type="button">수정</button><button class="btn small danger del" data-id="${x.id}" type="button">삭제</button>
  </div>`).join(""):`<div style="font-size:12px;color:var(--sub);padding:10px 0">등록된 업보가 없습니다.</div>`;
  box.querySelectorAll(".edit").forEach(b=>b.onclick=()=>{
    const x=items.find(v=>String(v.id)===String(b.dataset.id)); if(!x)return;
-   editingId=x.id; $("#name").value=x.name; $("#soopUserId").value=x.soopUserId||""; $("#image").value=x.image||""; $("#count").value=x.count??0; $("#status").value=x.status; $("#date").value=x.date||""; $("#desc").value=x.desc||"";
+   editingId=x.id; $("#name").value=x.name; $("#soopUserId").value=x.soopUserId||""; $("#image").value=x.image||""; $("#count").value=calculateUpboCount(x.desc); $("#status").value=x.status; $("#date").value=x.date||""; $("#desc").value=x.desc||"";
    $("#soopSelected").textContent=x.soopUserId?`연결됨: ${x.name} (${x.soopUserId})`:"";
    $("#saveBtn").textContent="업보 수정"; $("#drawer").classList.add("show"); refreshSoopViewers();
  });
@@ -330,14 +330,15 @@ function selectSoopViewer(id){
 $("#form").onsubmit=e=>{
  e.preventDefault();
  const soopId=$("#soopUserId").value.trim();
- const data={name:$("#name").value.trim(),soopUserId:soopId,image:$("#image").value.trim(),count:Math.max(0,Number($("#count").value||0)),status:$("#status").value,date:$("#date").value,desc:$("#desc").value.trim(),soopStationUrl:soopId?`https://www.sooplive.com/station/${encodeURIComponent(soopId)}`:""};
+ const data={name:$("#name").value.trim(),soopUserId:soopId,image:$("#image").value.trim(),count:calculateUpboCount($("#desc").value.trim()),status:$("#status").value,date:$("#date").value,desc:$("#desc").value.trim(),soopStationUrl:soopId?`https://www.sooplive.com/station/${encodeURIComponent(soopId)}`:""};
  if(!data.name)return;
  if(editingId){const x=items.find(v=>String(v.id)===String(editingId));Object.assign(x,data)}
  else items.unshift({id:Date.now()+"_"+Math.random().toString(16).slice(2),...data});
  save(); editingId=null; e.target.reset(); $("#soopSelected").textContent=""; $("#saveBtn").textContent="업보 등록"; render();
  $("#drawer").classList.add("show"); $("#adminBox").style.display="block"; $("#loginBox").style.display="none";
 };
-$("#cancelBtn").onclick=()=>{editingId=null;$("#form").reset();$("#soopSelected").textContent="";$("#saveBtn").textContent="업보 등록";$("#drawer").classList.add("show")};
+$("#desc").addEventListener("input",()=>{$("#count").value=calculateUpboCount($("#desc").value);});
+$("#cancelBtn").onclick=()=>{editingId=null;$("#form").reset();$("#soopSelected").textContent="";$("#saveBtn").textContent="업보 등록";$("#count").value=calculateUpboCount($("#desc").value);$("#drawer").classList.add("show")};
 $("#filters").onclick=e=>{const b=e.target.closest(".chip");if(!b)return;filter=b.dataset.filter;document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x===b));render()};
 $("#themeBtn").onclick=()=>{document.body.classList.toggle("dark");const d=document.body.classList.contains("dark");$("#themeBtn").textContent=d?"☾":"☼";localStorage.setItem("skyUpboTheme",d?"dark":"light")};
 if(localStorage.getItem("skyUpboTheme")==="dark"){document.body.classList.add("dark");$("#themeBtn").textContent="☾"}
