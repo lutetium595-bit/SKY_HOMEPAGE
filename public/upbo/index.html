@@ -57,7 +57,17 @@ footer{text-align:center;color:var(--sub);font-size:11px;margin-top:40px}
 .drawer{position:fixed;right:0;top:0;width:min(430px,100%);height:100vh;background:var(--panel);border-left:1px solid var(--line);z-index:60;transform:translateX(105%);transition:.25s;padding:22px;overflow:auto}.drawer.show{transform:translateX(0)}
 .drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.drawer h2{font-size:20px;margin:0}.close{font-size:22px;border:0;background:transparent;color:var(--text);cursor:pointer}
 .field{margin:12px 0}.field label{display:block;font-size:12px;font-weight:700;margin-bottom:6px}.field input,.field textarea,.field select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);font:inherit}.field textarea{min-height:100px;resize:vertical}
-.form-actions{display:flex;gap:8px;margin-top:15px}.primary{background:var(--accent);border-color:var(--accent);color:white}.danger{color:#fff;background:var(--danger);border-color:var(--danger)}
+.form-actions{display:flex;gap:8px;margin-top:15px}
+.soop-link-box{border:1px solid var(--line);background:var(--soft);border-radius:14px;padding:12px;margin:0 0 14px}
+.soop-link-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:9px}
+.soop-link-head b{font-size:13px}.soop-status{font-size:10px;color:var(--sub)}
+.soop-search{display:flex;gap:7px}.soop-search input{flex:1;min-width:0}
+.soop-viewers{max-height:180px;overflow:auto;margin-top:9px;display:grid;gap:6px}
+.soop-viewer{width:100%;text-align:left;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;padding:9px;cursor:pointer}
+.soop-viewer:hover{background:var(--bg);border-color:var(--accent)}
+.soop-viewer small{display:block;color:var(--sub);margin-top:3px}
+.soop-selected{font-size:11px;color:var(--accent);margin-top:8px;min-height:15px}
+.soop-profile{display:inline-flex;align-items:center;gap:5px;margin-top:5px;font-size:11px;color:var(--accent);text-decoration:none}.primary{background:var(--accent);border-color:var(--accent);color:white}.danger{color:#fff;background:var(--danger);border-color:var(--danger)}
 .admin-list{margin-top:25px;border-top:1px solid var(--line);padding-top:18px}.admin-item{display:flex;gap:9px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.grow{flex:1;min-width:0}.admin-item b{font-size:13px}.small{padding:7px 9px;font-size:11px}
 .modal{position:fixed;inset:0;display:grid;place-items:center;padding:18px;z-index:70;opacity:0;pointer-events:none;transition:.2s}.modal.show{opacity:1;pointer-events:auto}.modal-box{width:min(520px,100%);background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:var(--shadow);position:relative}.modal-box h2{margin:0 0 10px}.modal-box p{color:var(--sub);line-height:1.7;font-size:14px}.modal-close{position:absolute;right:15px;top:12px}
 .menu{position:absolute;width:190px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:7px;z-index:40;display:none}.menu.show{display:block}.menu a{display:block;padding:12px;border-radius:10px;text-decoration:none;color:var(--text);font-size:13px}.menu a:hover{background:var(--soft)}
@@ -79,12 +89,13 @@ footer{text-align:center;color:var(--sub);font-size:11px;margin-top:40px}
   <a href="../notice/index.html">공지사항</a>
   <a href="../calendar/index.html">캘린더</a>
   <a href="../dressing-room/index.html">의상목록</a>
+  <a aria-current="page" href="index.html">업보목록</a>
 </div>
 
 <main class="wrap">
   <section class="hero">
     <h1>업보목록</h1>
-    <p></p>
+    <p>시청자별 업보 내용과 횟수를 관리자모드에서 직접 관리하는 공간</p>
   </section>
   <div class="toolbar">
     <div class="filter" id="filters">
@@ -96,7 +107,7 @@ footer{text-align:center;color:var(--sub);font-size:11px;margin-top:40px}
     <div style="font-size:12px;color:var(--sub)" id="countText"></div>
   </div>
   <section class="list" id="list"></section>
-  <footer>© 2026 SKY - DAY[문의 D+DAY]</footer>
+  <footer>© 2026 SKY - DAY</footer>
 </main>
 
 <div class="overlay" id="overlay"></div>
@@ -109,10 +120,17 @@ footer{text-align:center;color:var(--sub);font-size:11px;margin-top:40px}
   </div>
   <div id="adminBox" style="display:none">
     <form id="form">
+      <div class="soop-link-box">
+        <div class="soop-link-head"><b>SOOP 시청자 연동</b><span class="soop-status" id="soopStatus">연동 대기</span></div>
+        <div class="soop-search"><input id="soopSearch" placeholder="SOOP 닉네임 또는 ID 검색"><button class="btn small" id="soopRefresh" type="button">새로고침</button></div>
+        <div class="soop-viewers" id="soopViewers"></div>
+        <div class="soop-selected" id="soopSelected"></div>
+      </div>
       <div class="field"><label>닉네임</label><input id="name" required placeholder="시청자 닉네임을 입력하세요"></div>
-      <div class="field"><label>프로필 이미지 URL (선택)</label><input id="image" type="url" placeholder="나중에 SOOP 연동 전까지 직접 입력"></div>
+      <div class="field"><label>SOOP User ID</label><input id="soopUserId" placeholder="SOOP 연동 시 자동 입력" readonly></div>
+      <div class="field"><label>프로필 이미지 URL (선택)</label><input id="image" type="url" placeholder="직접 입력하거나 기존 이미지를 사용"></div>
       <div class="field"><label>업보 내용</label><textarea id="desc" placeholder="업보 내용을 입력하세요. 예: 노래 부르기"></textarea></div>
-      <div class="field"><label>업보 횟수</label><input id="count" type="number" min="0" value="1" placeholder="예: 1"></div>
+      <div class="field"><label>업보 갯수</label><input id="count" type="number" min="0" value="1" placeholder="예: 1"></div>
       <div class="field"><label>상태</label><select id="status"><option>진행중</option><option>대기</option><option>완료</option></select></div>
       <div class="field"><label>등록 날짜</label><input id="date" type="date"></div>
       <div class="form-actions">
@@ -121,8 +139,9 @@ footer{text-align:center;color:var(--sub);font-size:11px;margin-top:40px}
       </div>
     </form>
     <div style="margin-top:18px;padding:12px;border-radius:12px;background:var(--soft);font-size:11px;color:var(--sub);line-height:1.6">
-  현재는 닉네임과 프로필 이미지를 직접 등록합니다.<br>
-  나중에 SOOP 연동 시 이 부분만 자동 연동하고 업보 내용·횟수는 계속 관리자모드에서 직접 관리할 수 있습니다.
+  SOOP Chat SDK에서 받은 시청자는 User ID를 기준으로 저장됩니다.<br>
+  관리자는 시청자를 선택해서 닉네임/ID를 업보에 연결하고, 업보 내용·횟수는 계속 직접 관리할 수 있습니다.<br>
+  ※ 실제 실시간 시청자 수집은 SOOP Developers 승인 및 Chat SDK 연결이 필요합니다.
 </div>
 <div class="admin-list">
       <div style="font-weight:800;font-size:14px;margin-bottom:8px">등록된 업보</div>
@@ -136,15 +155,28 @@ footer{text-align:center;color:var(--sub);font-size:11px;margin-top:40px}
   <div class="num" id="mNum"></div><h2 id="mName"></h2>
   <span class="badge" id="mStatus"></span>
   <div style="font-size:12px;font-weight:800;margin-top:16px;color:var(--sub)">업보 내용</div><p id="mDesc"></p>
-  <div class="meta"><span id="mDate"></span><span>SKY - DAY</span></div>
+  <div class="meta"><span id="mDate"></span><span>SKY - DAY</span></div><a class="soop-profile" id="mSoop" target="_blank" rel="noopener" style="display:none">SOOP 프로필 보기 ↗</a>
 </div></div>
 
 <!-- SKY-DAY FORCE ADMIN PASSWORD V2 -->
 
 <!-- SKY-DAY RENDER + POSTGRESQL SYNC V1 -->
 <script>
+
+function calculateUpboCount(text){
+  if(!text) return 0;
+  return String(text)
+    .split(',')
+    .map(s=>s.trim())
+    .filter(Boolean)
+    .reduce((total,item)=>{
+      const m=item.match(/[*×]\s*(\d+)\s*$/);
+      return total + (m ? parseInt(m[1],10) : 1);
+    },0);
+}
+
 (function(){
-  var KEYS = ["gaksky_calendar_shared_v1", "skyCalendarEvents", "sky_notice_data", "skyDresses", "skyUpboItems"];
+  var KEYS = ["gaksky_calendar_shared_v1", "skyCalendarEvents", "sky_notice_data", "skyDresses", "skyUpboItems", "skySoopViewers"];
   var API = '/api/data/';
   var PASSWORD = 'soopgodsky221010><';
 
@@ -226,9 +258,11 @@ footer{text-align:center;color:var(--sub);font-size:11px;margin-top:40px}
 const $=s=>document.querySelector(s);
 let items=JSON.parse(localStorage.getItem("skyUpboItems")||"[]");
 let filter="전체", editingId=null;
+let soopViewers=[];
+const API="/api/data/";
+const PASSWORD=window.__SKY_DAY_ADMIN_PASSWORD__ ? window.__SKY_DAY_ADMIN_PASSWORD__() : "";
 const save=()=>localStorage.setItem("skyUpboItems",JSON.stringify(items));
 const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-
 function badgeClass(s){return s==="완료"?"done":s==="진행중"?"progress":"pending"}
 function render(){
  const view=filter==="전체"?items:items.filter(x=>x.status===filter);
@@ -244,24 +278,25 @@ function render(){
 }
 function openDetail(id){
  const x=items.find(v=>String(v.id)===String(id)); if(!x)return;
- $("#mNum").textContent="UPBO";
- $("#mName").textContent=x.name;
+ $("#mNum").textContent="UPBO"; $("#mName").textContent=x.name;
  $("#mStatus").textContent=x.status; $("#mStatus").className="badge "+badgeClass(x.status);
- $("#mDesc").textContent=x.desc||"등록된 업보 내용이 없습니다.";
- $("#mDate").textContent=x.date||"날짜 미정";
+ $("#mDesc").textContent=x.desc||"등록된 업보 내용이 없습니다."; $("#mDate").textContent=x.date||"날짜 미정";
+ const link=$("#mSoop");
+ if(x.soopUserId){link.href=x.soopStationUrl||`https://www.sooplive.com/station/${encodeURIComponent(x.soopUserId)}`;link.style.display="inline-flex";}
+ else link.style.display="none";
  $("#modal").classList.add("show");
 }
 function renderAdmin(){
  const box=$("#adminList");
  box.innerHTML=items.length?items.map(x=>`<div class="admin-item">
-   <div class="grow"><b>${esc(x.name)}</b><div style="font-size:11px;color:var(--sub);margin-top:3px">${esc(x.status)} · 업보 ${Number(x.count ?? 0)} · ${esc(x.desc||"내용 없음")}</div></div>
-   <button class="btn small edit" data-id="${x.id}" type="button">수정</button>
-   <button class="btn small danger del" data-id="${x.id}" type="button">삭제</button>
+   <div class="grow"><b>${esc(x.name)}</b><div style="font-size:11px;color:var(--sub);margin-top:3px">${x.soopUserId?`SOOP · ${esc(x.soopUserId)} · `:""}${esc(x.status)} · 업보 ${Number(x.count ?? 0)} · ${esc(x.desc||"내용 없음")}</div></div>
+   <button class="btn small edit" data-id="${x.id}" type="button">수정</button><button class="btn small danger del" data-id="${x.id}" type="button">삭제</button>
  </div>`).join(""):`<div style="font-size:12px;color:var(--sub);padding:10px 0">등록된 업보가 없습니다.</div>`;
  box.querySelectorAll(".edit").forEach(b=>b.onclick=()=>{
    const x=items.find(v=>String(v.id)===String(b.dataset.id)); if(!x)return;
-   editingId=x.id; $("#name").value=x.name; $("#image").value=x.image||""; $("#count").value=x.count??0; $("#status").value=x.status; $("#date").value=x.date||""; $("#desc").value=x.desc||"";
-   $("#saveBtn").textContent="업보 수정"; $("#drawer").classList.add("show");
+   editingId=x.id; $("#name").value=x.name; $("#soopUserId").value=x.soopUserId||""; $("#image").value=x.image||""; $("#count").value=x.count??0; $("#status").value=x.status; $("#date").value=x.date||""; $("#desc").value=x.desc||"";
+   $("#soopSelected").textContent=x.soopUserId?`연결됨: ${x.name} (${x.soopUserId})`:"";
+   $("#saveBtn").textContent="업보 수정"; $("#drawer").classList.add("show"); refreshSoopViewers();
  });
  box.querySelectorAll(".del").forEach(b=>b.onclick=()=>{
    const x=items.find(v=>String(v.id)===String(b.dataset.id)); if(!x)return;
@@ -270,43 +305,74 @@ function renderAdmin(){
    $("#drawer").classList.add("show"); $("#adminBox").style.display="block"; $("#loginBox").style.display="none";
  });
 }
+async function refreshSoopViewers(){
+  const box=$("#soopViewers"), status=$("#soopStatus");
+  if(!box)return;
+  status.textContent="불러오는 중…";
+  try{
+    const r=await fetch('/api/soop/viewers',{headers:{'x-admin-password':PASSWORD},cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    soopViewers=await r.json();
+    status.textContent=soopViewers.length?`연동된 시청자 ${soopViewers.length}명`:"연동된 시청자 없음";
+    renderSoopViewers();
+  }catch(e){status.textContent="SOOP 연동 목록을 불러오지 못함";box.innerHTML='<div style="font-size:11px;color:var(--sub);padding:7px">SOOP 시청자 데이터가 아직 없습니다.</div>';}
+}
+function renderSoopViewers(){
+  const q=($( "#soopSearch").value||"").trim().toLowerCase();
+  const list=soopViewers.filter(v=>!q||String(v.userNickname||"").toLowerCase().includes(q)||String(v.userId||"").toLowerCase().includes(q)).slice(0,80);
+  $("#soopViewers").innerHTML=list.length?list.map(v=>`<button type="button" class="soop-viewer" data-userid="${esc(v.userId)}"><b>${esc(v.userNickname)}</b><small>${esc(v.userId)} · 최근 ${esc(v.lastSeenAt?new Date(v.lastSeenAt).toLocaleString("ko-KR"):"미상")}</small></button>`).join(""):`<div style="font-size:11px;color:var(--sub);padding:7px">검색 결과가 없습니다.</div>`;
+  $("#soopViewers").querySelectorAll(".soop-viewer").forEach(b=>b.onclick=()=>selectSoopViewer(b.dataset.userid));
+}
+function selectSoopViewer(id){
+  const v=soopViewers.find(x=>String(x.userId)===String(id)); if(!v)return;
+  $("#name").value=v.userNickname||""; $("#soopUserId").value=v.userId||""; $("#soopSelected").textContent=`연결됨: ${v.userNickname} (${v.userId})`;
+}
 $("#form").onsubmit=e=>{
  e.preventDefault();
- const data={name:$("#name").value.trim(),image:$("#image").value.trim(),count:Math.max(0,Number($("#count").value||0)),status:$("#status").value,date:$("#date").value,desc:$("#desc").value.trim()};
+ const soopId=$("#soopUserId").value.trim();
+ const data={name:$("#name").value.trim(),soopUserId:soopId,image:$("#image").value.trim(),count:Math.max(0,Number($("#count").value||0)),status:$("#status").value,date:$("#date").value,desc:$("#desc").value.trim(),soopStationUrl:soopId?`https://www.sooplive.com/station/${encodeURIComponent(soopId)}`:""};
  if(!data.name)return;
  if(editingId){const x=items.find(v=>String(v.id)===String(editingId));Object.assign(x,data)}
  else items.unshift({id:Date.now()+"_"+Math.random().toString(16).slice(2),...data});
- save(); editingId=null; e.target.reset(); $("#saveBtn").textContent="업보 등록"; render();
+ save(); editingId=null; e.target.reset(); $("#soopSelected").textContent=""; $("#saveBtn").textContent="업보 등록"; render();
  $("#drawer").classList.add("show"); $("#adminBox").style.display="block"; $("#loginBox").style.display="none";
 };
-$("#cancelBtn").onclick=()=>{editingId=null;$("#form").reset();$("#saveBtn").textContent="업보 등록";$("#drawer").classList.add("show")};
+$("#cancelBtn").onclick=()=>{editingId=null;$("#form").reset();$("#soopSelected").textContent="";$("#saveBtn").textContent="업보 등록";$("#drawer").classList.add("show")};
 $("#filters").onclick=e=>{const b=e.target.closest(".chip");if(!b)return;filter=b.dataset.filter;document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x===b));render()};
 $("#themeBtn").onclick=()=>{document.body.classList.toggle("dark");const d=document.body.classList.contains("dark");$("#themeBtn").textContent=d?"☾":"☼";localStorage.setItem("skyUpboTheme",d?"dark":"light")};
 if(localStorage.getItem("skyUpboTheme")==="dark"){document.body.classList.add("dark");$("#themeBtn").textContent="☾"}
-$("#menuBtn").onclick=(e)=>{
-  const menu=$("#menu");
-  const btn=$("#menuBtn");
-  const r=btn.getBoundingClientRect();
-  const willOpen=!menu.classList.contains("show");
-  if(!willOpen){menu.classList.remove("show");return}
-  menu.style.top=(r.bottom+8)+"px";
-  menu.style.left=(r.right-menu.offsetWidth)+"px";
-  menu.style.right="auto";
-  menu.classList.add("show");
-  requestAnimationFrame(()=>{
-    menu.style.left=(r.right-menu.offsetWidth)+"px";
-  });
-};
+$("#menuBtn").onclick=(e)=>{const menu=$("#menu"),btn=$("#menuBtn"),r=btn.getBoundingClientRect(),willOpen=!menu.classList.contains("show");if(!willOpen){menu.classList.remove("show");return}menu.style.top=(r.bottom+8)+"px";menu.style.left=(r.right-menu.offsetWidth)+"px";menu.style.right="auto";menu.classList.add("show");requestAnimationFrame(()=>menu.style.left=(r.right-menu.offsetWidth)+"px")};
 document.addEventListener("click",e=>{if(!e.target.closest("#menuBtn")&&!e.target.closest("#menu"))$("#menu").classList.remove("show")});
-$("#adminBtn").onclick=()=>{$("#drawer").classList.add("show");$("#overlay").classList.add("show");if(localStorage.getItem("sky_day_shared_admin")==="1"){$("#loginBox").style.display="none";$("#adminBox").style.display="block";renderAdmin()}};
+$("#adminBtn").onclick=()=>{$("#drawer").classList.add("show");$("#overlay").classList.add("show");if(localStorage.getItem("sky_day_shared_admin")==="1"){$("#loginBox").style.display="none";$("#adminBox").style.display="block";renderAdmin();refreshSoopViewers()}};
 function closeDrawer(){$("#drawer").classList.remove("show");$("#overlay").classList.remove("show")}
 $("#closeDrawer").onclick=closeDrawer;$("#overlay").onclick=closeDrawer;
-$("#loginBtn").onclick=()=>{if($("#password").value===window.__SKY_DAY_ADMIN_PASSWORD__()){localStorage.setItem("sky_day_shared_admin","1");$("#loginBox").style.display="none";$("#adminBox").style.display="block";renderAdmin()}else alert("비밀번호가 올바르지 않습니다.")};
-$("#closeModal").onclick=()=>$("#modal").classList.remove("show");
-$("#modal").onclick=e=>{if(e.target===$("#modal"))$("#modal").classList.remove("show")};
+$("#loginBtn").onclick=()=>{if($("#password").value===window.__SKY_DAY_ADMIN_PASSWORD__()){$("#password").value="";localStorage.setItem("sky_day_shared_admin","1");$("#loginBox").style.display="none";$("#adminBox").style.display="block";renderAdmin();refreshSoopViewers()}else alert("비밀번호가 올바르지 않습니다.")};
+$("#closeModal").onclick=()=>$("#modal").classList.remove("show"); $("#modal").onclick=e=>{if(e.target===$("#modal"))$("#modal").classList.remove("show")};
+$("#soopRefresh").onclick=refreshSoopViewers; $("#soopSearch").oninput=renderSoopViewers;
+window.addEventListener("storage",e=>{if(e.key==="skySoopViewers")refreshSoopViewers()});
 render();
 </script>
 
+<!-- SKY-DAY SOOP VIEWER BRIDGE V1 -->
+<script>
+(function(){
+  const API='/api/soop/viewers';
+  function adminPassword(){return window.__SKY_DAY_ADMIN_PASSWORD__?window.__SKY_DAY_ADMIN_PASSWORD__():'';}
+  async function ingest(v){
+    if(!v || !v.userId || !v.userNickname) return;
+    try{
+      await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','x-admin-password':adminPassword()},body:JSON.stringify({userId:String(v.userId),userNickname:String(v.userNickname),userStatus:v.userStatus||{}})});
+      window.dispatchEvent(new CustomEvent('sky-day-soop-viewer',{detail:v}));
+    }catch(e){console.warn('SOOP 시청자 저장 실패',e)}
+  }
+  // SOOP Chat SDK의 IN / MESSAGE / USERSTATUS_CHANGED 이벤트를 연결할 수 있도록 공개한다.
+  window.SKY_DAY_SOOP_INGEST_VIEWER=ingest;
+  window.addEventListener('message',e=>{
+    if(!e.data || e.data.type!=='SKY_DAY_SOOP_VIEWER') return;
+    ingest(e.data.viewer||e.data);
+  });
+})();
+</script>
 <!-- SKY-DAY SHARED THEME SYNC FINAL -->
 <script>
 (function(){

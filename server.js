@@ -24,7 +24,8 @@ const ALLOWED_KEYS = new Set([
   "sky_notice_data",
   "skyDresses",
   "skyUpboItems",
-  "skyProfileData"
+  "skyProfileData",
+  "skySoopViewers"
 ]);
 
 app.use(express.json({ limit: "5mb" }));
@@ -69,6 +70,67 @@ app.get("/api/events", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "일정을 불러오지 못했습니다." });
+  }
+});
+
+
+// SOOP 시청자 연동 데이터: Chat SDK에서 받은 userId/userNickname을 저장합니다.
+app.get("/api/soop/viewers", requireAdmin, async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT value FROM sky_day_data WHERE key = $1",
+      ["skySoopViewers"]
+    );
+    if (!result.rowCount) return res.json([]);
+    const value = result.rows[0].value;
+    res.json(Array.isArray(value) ? value : []);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "SOOP 시청자 목록을 불러오지 못했습니다." });
+  }
+});
+
+app.post("/api/soop/viewers", requireAdmin, async (req, res) => {
+  try {
+    const v = req.body || {};
+    const userId = String(v.userId || "").trim();
+    const userNickname = String(v.userNickname || "").trim();
+    if (!userId || !userNickname) {
+      return res.status(400).json({ error: "userId와 userNickname이 필요합니다." });
+    }
+
+    const current = await pool.query(
+      "SELECT value FROM sky_day_data WHERE key = $1",
+      ["skySoopViewers"]
+    );
+    let list = current.rowCount && Array.isArray(current.rows[0].value)
+      ? current.rows[0].value
+      : [];
+
+    const now = new Date().toISOString();
+    const next = {
+      userId,
+      userNickname,
+      userStatus: v.userStatus || {},
+      lastSeenAt: now,
+      stationUrl: `https://www.sooplive.com/station/${encodeURIComponent(userId)}`
+    };
+    const idx = list.findIndex(x => String(x.userId) === userId);
+    if (idx >= 0) list[idx] = { ...list[idx], ...next };
+    else list.unshift(next);
+    list = list.slice(0, 5000);
+
+    await pool.query(
+      `INSERT INTO sky_day_data (key, value, updated_at)
+       VALUES ($1, $2::jsonb, NOW())
+       ON CONFLICT (key)
+       DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()`,
+      ["skySoopViewers", JSON.stringify(list)]
+    );
+    res.json({ ok: true, viewer: next });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "SOOP 시청자를 저장하지 못했습니다." });
   }
 });
 

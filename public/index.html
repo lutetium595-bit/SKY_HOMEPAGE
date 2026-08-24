@@ -1110,6 +1110,19 @@ body.dark #profile .profile-edit-input{
 
 <!-- SKY-DAY RENDER + POSTGRESQL SYNC V1 -->
 <script>
+
+function calculateUpboCount(text){
+  if(!text) return 0;
+  return String(text)
+    .split(',')
+    .map(s=>s.trim())
+    .filter(Boolean)
+    .reduce((total,item)=>{
+      const m=item.match(/[*×]\s*(\d+)\s*$/);
+      return total + (m ? parseInt(m[1],10) : 1);
+    },0);
+}
+
 (function(){
   var KEYS = ["gaksky_calendar_shared_v1", "skyCalendarEvents", "sky_notice_data", "skyDresses", "skyUpboItems", "skyProfileData", "skyProfileImages"];
   var API = '/api/data/';

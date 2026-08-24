@@ -204,8 +204,8 @@ body.dark nav.top-nav{
   <section class="hero">
     <div>
       <div class="eyebrow">SKY COLLECTION</div>
-      <h1>이달의 의상</h1>
-      <p class="desc"></p>
+      <h1>의상목록</h1>
+      <p class="desc">하늘이의 다양한 의상을 한곳에서 확인할 수 있어.</p>
     </div>
   </section>
   <div class="filters" id="filters"></div>
@@ -226,12 +226,25 @@ body.dark nav.top-nav{
   </div>
 </div>
 
-<footer class="footer">© 2026 SKY - DAY[문의 D+DAY]</footer>
+<footer class="footer">© 2026 SKY - DAY</footer>
 
 <!-- SKY-DAY FORCE ADMIN PASSWORD V2 -->
 
 <!-- SKY-DAY RENDER + POSTGRESQL SYNC V1 -->
 <script>
+
+function calculateUpboCount(text){
+  if(!text) return 0;
+  return String(text)
+    .split(',')
+    .map(s=>s.trim())
+    .filter(Boolean)
+    .reduce((total,item)=>{
+      const m=item.match(/[*×]\s*(\d+)\s*$/);
+      return total + (m ? parseInt(m[1],10) : 1);
+    },0);
+}
+
 (function(){
   var KEYS = ["gaksky_calendar_shared_v1", "skyCalendarEvents", "sky_notice_data", "skyDresses", "skyUpboItems"];
   var API = '/api/data/';
