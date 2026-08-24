@@ -1082,22 +1082,14 @@ body.dark #profile .profile-edit-input{
 
 <div class="modal-bg" id="adminModal">
 <div class="modal">
-<div class="head"><h2>관리자 모드 · 공유 캘린더</h2><button class="icon" onclick="closeAdmin()">×</button></div>
+<div class="head"><h2>관리자 모드</h2><button class="icon" onclick="closeAdmin()">×</button></div>
 <div id="login">
 <div class="field"><label>관리자 비밀번호</label><input id="pw" type="password" placeholder="비밀번호"></div>
 <div class="actions"><button class="btn" onclick="login()">로그인</button></div>
 
 </div>
 <div id="editor" style="display:none">
-<div class="fields">
-<div class="field"><label>시작 날짜</label><input id="date" type="date"></div>
-<div class="field"><label>종료 날짜</label><input id="endDate" type="date"></div>
-<div class="field"><label>시작 시간</label><input id="time" type="time"></div>
-<div class="field"><label>종료 시간</label><input id="endTime" type="time"></div>
-<div class="field"><label>카테고리</label><select id="cat"><option value="broadcast">방송</option><option value="game">게임</option><option value="talk">소통</option><option value="break">휴방</option><option value="etc">기타</option></select></div>
-<div class="field"><label>제목</label><input id="title" placeholder="예: 게임 방송"></div>
-<div class="field full"><label>상세 내용</label><textarea id="detail"></textarea></div>
-</div>
+
 <div class="profile-slider-admin">
   <div class="field full">
     <label>프로필 사진 슬라이드</label>
@@ -1109,9 +1101,7 @@ body.dark #profile .profile-edit-input{
   </div>
   <div class="meta" id="profileImageStatus"></div>
 </div>
-<div class="actions"><button class="btn" onclick="addEvent()">일정 추가</button><button class="btn secondary" onclick="clearForm()">초기화</button><button class="btn secondary" onclick="logout()">로그아웃</button></div>
-<div class="meta" id="status">추가/삭제된 일정은 주간 일정표에 반영됩니다.</div>
-<div class="admin-list" id="adminList"></div>
+<div class="actions"><button class="btn secondary" onclick="logout()">로그아웃</button></div>
 </div>
 </div>
 </div>
@@ -1287,7 +1277,7 @@ function openAdmin(){document.getElementById("adminModal").classList.add("show")
 function closeAdmin(){document.getElementById("adminModal").classList.remove("show")}
 function login(){if(document.getElementById("pw").value===window.__SKY_DAY_ADMIN_PASSWORD__()){localStorage[SESSION]="1";showEditor()}else alert("비밀번호가 올바르지 않습니다.")}
 function logout(){delete localStorage[SESSION];document.getElementById("editor").style.display="none";document.getElementById("login").style.display="block"}
-function showEditor(){document.getElementById("login").style.display="none";document.getElementById("editor").style.display="block";adminList();if(window.loadProfileImagesAdmin)window.loadProfileImagesAdmin();if(window.__startPendingProfileEdit__)window.__startPendingProfileEdit()}
+function showEditor(){document.getElementById("login").style.display="none";document.getElementById("editor").style.display="block";if(window.loadProfileImagesAdmin)window.loadProfileImagesAdmin();if(window.__startPendingProfileEdit__)window.__startPendingProfileEdit()}
 function clearForm(){["date","endDate","time","endTime","title","detail"].forEach(x=>document.getElementById(x).value="");document.getElementById("cat").value="talk"}
 function addEvent(){
 let date=document.getElementById("date").value,end=document.getElementById("endDate").value||date,title=document.getElementById("title").value.trim();

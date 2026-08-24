@@ -7,6 +7,7 @@
 - 일정표 수정 → 일정표와 프로필 첫 화면 주간일정표가 같은 데이터를 사용
 - 공지사항 수정 → 공지사항 페이지와 프로필 첫 화면 공지가 같은 데이터를 사용
 - 의상목록/업보목록 수정도 모든 방문자에게 공용 반영
+- 공통 관리자 비밀번호: soopgodsky221010><
 
 ## Render 배포
 1. 이 ZIP의 압축을 푼 뒤 GitHub 저장소에 업로드
@@ -14,7 +15,7 @@
 3. Build Command: npm install
 4. Start Command: npm start
 5. PostgreSQL 데이터베이스를 만들고 DATABASE_URL 환경변수 설정
-6. ADMIN_PASSWORD 
+6. ADMIN_PASSWORD 환경변수를 soopgodsky221010>< 로 설정
 7. 배포
 
 ## 중요
