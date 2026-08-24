@@ -145,6 +145,39 @@ header{height:64px;display:flex;align-items:center;padding:0 18px;background:rgb
   color:var(--text);
 }
 </style>
+<style id="sky-calendar-category-colors">
+/* 캘린더 카테고리 - 첨부 이미지처럼 은은한 파스텔/반투명 스타일 */
+.event.방송,.event-bar.방송{
+  background:rgba(135,206,235,.22) !important;
+  color:#3d6d8d !important;
+  border-color:rgba(135,206,235,.75) !important;
+}
+.event.휴방,.event-bar.휴방{
+  background:rgba(255,216,77,.24) !important;
+  color:#806b18 !important;
+  border-color:rgba(255,216,77,.78) !important;
+}
+.event.게임,.event-bar.게임{
+  background:rgba(155,126,222,.20) !important;
+  color:#62508f !important;
+  border-color:rgba(155,126,222,.72) !important;
+}
+.event.기타,.event-bar.기타{
+  background:rgba(105,181,120,.20) !important;
+  color:#3d7d51 !important;
+  border-color:rgba(105,181,120,.72) !important;
+}
+.event.소통,.event-bar.소통{
+  background:rgba(242,143,184,.20) !important;
+  color:#a15c7d !important;
+  border-color:rgba(242,143,184,.72) !important;
+}
+
+/* 주간/월간 일정 모두 동일한 은은한 느낌 */
+.event,.event-bar{
+  box-shadow:0 2px 8px rgba(80,100,130,.06);
+}
+</style>
 </head>
 <body>
 <header><div class="logo">SKY</div><div class="actions"><button class="icon" id="theme">☼</button><button class="icon" id="hamb">☰</button><button class="icon" id="adminBtn" aria-label="관리자">⚙</button></div>

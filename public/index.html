@@ -788,7 +788,207 @@ header #nav a{
 }
 
 </style>
-</head>
+<style id="sky-weekly-legend-exact-colors">
+/* 실제 메인 주간일정표 기간 오른쪽 범례의 실제 클래스(.dot.*)에 적용 */
+.week-caption-row .category-legend .dot.broadcast{background:#87CEEB !important}
+.week-caption-row .category-legend .dot.break{background:#FFD84D !important}
+.week-caption-row .category-legend .dot.game{background:#9B7EDE !important}
+.week-caption-row .category-legend .dot.etc{background:#69B578 !important}
+.week-caption-row .category-legend .dot.talk{background:#F28FB8 !important}
+</style><style id="sky-weekly-event-category-colors-final">
+/* 메인 주간일정표 일정 카드 카테고리 색상 */
+#weekView .screenshot-event.방송{
+  border-left:5px solid #87CEEB !important;
+  background:rgba(135,206,235,.16) !important;
+}
+#weekView .screenshot-event.휴방{
+  border-left:5px solid #FFD84D !important;
+  background:rgba(255,216,77,.18) !important;
+}
+#weekView .screenshot-event.게임{
+  border-left:5px solid #9B7EDE !important;
+  background:rgba(155,126,222,.16) !important;
+}
+#weekView .screenshot-event.기타{
+  border-left:5px solid #69B578 !important;
+  background:rgba(105,181,120,.16) !important;
+}
+#weekView .screenshot-event.소통{
+  border-left:5px solid #F28FB8 !important;
+  background:rgba(242,143,184,.16) !important;
+}
+</style><style id="sky-profile-inline-edit-style">
+#profile .profile-edit-input{
+  width:100%;box-sizing:border-box;border:1px solid rgba(66,133,244,.35);
+  border-radius:8px;padding:7px 9px;background:rgba(255,255,255,.82);
+  color:inherit;font:inherit;outline:none;
+}
+body.dark #profile .profile-edit-input{
+  background:rgba(30,42,60,.92);border-color:rgba(135,180,255,.35);color:#eef5ff;
+}
+#profile .profile-edit-input:focus{border-color:#4285f4;box-shadow:0 0 0 3px rgba(66,133,244,.12)}
+#profile .profile-edit-area{min-height:58px;resize:vertical}
+#profile .profile-edit-actions{display:none}
+#profile.profile-editing .profile-edit-actions{display:flex}
+#profile.profile-editing .row,#profile.profile-editing .profile-row{margin-top:10px;margin-bottom:10px}
+</style><style id="sky-profile-hero-content-spacing">
+/* 중간 바로가기 삭제 후 상단 프로필과 주간 일정표 사이 여백 */
+.hero + .content{
+  margin-top:18px;
+}
+</style><style id="sky-profile-multi-slider">
+.sky-profile-slider{
+  position:relative!important;
+  padding:0!important;
+  overflow:hidden!important;
+  min-height:290px!important;
+}
+.sky-slider-track{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  border-radius:17px;
+}
+.sky-slider-slide{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:opacity .65s ease;
+  display:block;
+}
+.sky-slider-slide.active{opacity:1}
+.sky-slider-btn{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:5;
+  width:38px;
+  height:38px;
+  border:1px solid rgba(255,255,255,.45);
+  border-radius:50%;
+  background:rgba(20,35,55,.38);
+  color:#fff;
+  font-size:24px;
+  line-height:1;
+  cursor:pointer;
+  opacity:0;
+  transition:opacity .2s,background .2s;
+  backdrop-filter:blur(4px);
+}
+.sky-profile-slider:hover .sky-slider-btn{opacity:1}
+.sky-slider-btn:hover{background:rgba(20,35,55,.65)}
+.sky-slider-prev{left:12px}
+.sky-slider-next{right:12px}
+.sky-slider-dots{
+  position:absolute;
+  left:50%;
+  bottom:10px;
+  transform:translateX(-50%);
+  display:flex;
+  gap:5px;
+  z-index:6;
+  padding:4px 7px;
+  border-radius:20px;
+  background:rgba(20,35,55,.25);
+}
+.sky-slider-dot{
+  width:7px;
+  height:7px;
+  border:0;
+  padding:0;
+  border-radius:50%;
+  background:rgba(255,255,255,.5);
+  cursor:pointer;
+}
+.sky-slider-dot.active{background:#fff;transform:scale(1.15)}
+.profile-slider-admin{
+  margin:14px 0 4px;
+  padding:14px;
+  border:1px solid #d8e6f7;
+  border-radius:12px;
+  background:rgba(238,246,255,.45);
+}
+.profile-slider-admin textarea{
+  width:100%;
+  min-height:110px;
+  box-sizing:border-box;
+  resize:vertical;
+  border:1px solid #cfdff0;
+  border-radius:9px;
+  padding:10px;
+  font:inherit;
+  color:inherit;
+  background:#fff;
+}
+.dark .profile-slider-admin{
+  border-color:#33445f;
+  background:rgba(38,52,74,.5);
+}
+.dark .profile-slider-admin textarea{
+  background:#1e2a3d;
+  border-color:#40536f;
+  color:#eef5ff;
+}
+@media(max-width:650px){
+  .sky-profile-slider{min-height:200px!important}
+  .sky-slider-btn{opacity:.85;width:34px;height:34px}
+}
+</style><style id="sky-admin-modal-header-fix">
+/* 관리자 모달이 상단 고정바보다 항상 위에 표시되도록 */
+#adminModal{
+  position:fixed !important;
+  inset:0 !important;
+  z-index:99999 !important;
+}
+#adminModal .modal{
+  position:relative;
+  z-index:100000;
+  max-height:calc(100vh - 40px);
+  overflow-y:auto;
+}
+#adminModal .head{
+  position:sticky;
+  top:0;
+  z-index:100001;
+  background:inherit;
+}
+</style>
+<style id="sky-season-effects-css">
+/* 계절효과: 모든 프로필/콘텐츠 뒤에서 은은하게 표시 */
+#skySeasonFx{
+  position:fixed;
+  inset:0;
+  z-index:-1 !important;
+  pointer-events:none;
+  overflow:hidden;
+}
+.sky-season-particle{
+  position:absolute;
+  left:-10vw;
+  top:-10vh;
+  opacity:0;
+  will-change:transform,opacity;
+  animation:skySeasonFallSmooth linear infinite;
+  user-select:none;
+  pointer-events:none;
+  transform-origin:center;
+  text-shadow:0 1px 4px rgba(40,60,80,.06);
+}
+@keyframes skySeasonFallSmooth{
+  0%{transform:translate(-8vw,-8vh) rotate(0deg);opacity:0}
+  7%{opacity:.55}
+  50%{opacity:.62}
+  93%{opacity:.48}
+  100%{transform:translate(118vw,118vh) rotate(280deg);opacity:0}
+}
+.sky-season-particle.blossom{filter:drop-shadow(0 1px 3px rgba(210,100,140,.06))}
+.sky-season-particle.leaf{filter:drop-shadow(0 1px 3px rgba(60,130,80,.06))}
+.sky-season-particle.autumn{filter:drop-shadow(0 1px 3px rgba(170,100,40,.07))}
+.sky-season-particle.snow{filter:drop-shadow(0 1px 3px rgba(120,160,210,.08))}
+</style></head>
 <body>
 <header><div class="logo">SKY</div><div class="header-actions">
 <button class="icon" id='sky-day-theme' onclick="toggleTheme()">☼</button>
@@ -806,24 +1006,24 @@ header #nav a{
 <main>
 <section class="hero">
 <div class="card intro"><div class="welcome">안녕하세요! 각하늘의 공간에 오신 것을 환영해요</div><div class="name">각하늘 <span>♡</span></div><div class="message">오늘도 찾아와줘서 고마워요!</div></div>
-<div class="card gif" id="live"><img src="https://stimg.afreecatv.com/NORMAL_BBS/1/24960761/45616668a579de86a.gif" alt="각하늘 프로필 이미지"></div>
+<div class="card gif sky-profile-slider" id="live">
+  <div class="sky-slider-track" id="profileSliderTrack"></div>
+  <button class="sky-slider-btn sky-slider-prev" type="button" aria-label="이전 사진">‹</button>
+  <button class="sky-slider-btn sky-slider-next" type="button" aria-label="다음 사진">›</button>
+  <div class="sky-slider-dots" id="profileSliderDots"></div>
+</div>
 <div class="card profile" id="profile">
-<div class="section-head"><div class="title">PROFILE</div><button class="more-btn" onclick="showText('프로필 더보기','프로필 상세 내용을 확인할 수 있습니다.')">더보기</button></div>
-<div class="row"><b>생일</b><span>02월 04일</span><span class="extra" id="dday">계산중</span></div>
-<div class="row"><b>첫 방송일</b><span>2022년 10월 10일</span><span class="extra" id="days">계산중</span></div>
-<div class="row"><b>MBTI</b><span>INFJ / ESTP</span></div>
-<div class="row"><b>고정방송시간</b><span>오후 5시</span></div>
-<div class="profile-row broadcast-days-row"><span class="label">방송요일</span><span class="value">월 · 화 · 수 · 목 · 금 / 일요일 고정휴방</span></div>
-<div class="row"><b>좋아하는 것</b><span>가족, 각시의 사랑, 비오는 날,<br>눈오는 날, 손끝에 스치는 바람</span></div>
+<div class="section-head"><div class="title">PROFILE</div><button class="more-btn" id="profileEditBtn" onclick="toggleProfileEdit()">수정</button></div>
+<div class="row"><b>생일</b><span id="profileBirthday">02월 04일</span><span class="extra" id="dday">계산중</span></div>
+<div class="row"><b>첫 방송일</b><span id="profileFirstBroadcast">2022년 10월 10일</span><span class="extra" id="days">계산중</span></div>
+<div class="row"><b>MBTI</b><span id="profileMbti">INFJ / ESTP</span></div>
+<div class="row"><b>고정방송시간</b><span id="profileFixedTime">오후 5시</span></div>
+<div class="profile-row broadcast-days-row"><span class="label">방송요일</span><span class="value" id="profileBroadcastDays">월 · 화 · 수 · 목 · 금 / 일요일 고정휴방</span></div>
+<div class="row"><b>좋아하는 것</b><span id="profileLikes">가족, 각시의 사랑, 비오는 날,<br>눈오는 날, 손끝에 스치는 바람</span></div>
 </div>
 </section>
 
-<section class="quick-grid">
-<div class="quick" onclick="window.location.href='./calendar/index.html'"><div><div class="qt">일정표</div><div class="qs">방송 일정 확인</div></div></div>
-<div class="quick" onclick="window.location.href='./notice/index.html'"><div><div class="qt">공지사항</div><div class="qs">하늘이의 공지 확인</div></div></div>
-<div id="skyDressingCTA" class="quick" onclick="window.location.href='./dressing-room/index.html'; return false;"><div><div class="qt">의상 목록</div><div class="qs" onclick="window.location.href='./dressing-room/index.html'">의상 모아보기</div></div></div>
-<div class="quick" id="skyUpboCTA" onclick="window.location.href='./upbo/index.html'; return false;"><div><div class="qt">업보 목록</div><div class="qs">업보 모아보기</div></div></div>
-</section>
+
 
 <section class="content">
 <div class="card weekly-calendar-card" id="calendar">
@@ -898,6 +1098,17 @@ header #nav a{
 <div class="field"><label>제목</label><input id="title" placeholder="예: 게임 방송"></div>
 <div class="field full"><label>상세 내용</label><textarea id="detail"></textarea></div>
 </div>
+<div class="profile-slider-admin">
+  <div class="field full">
+    <label>프로필 사진 슬라이드</label>
+    <textarea id="profileImageUrls" placeholder="사진 URL을 한 줄에 하나씩 입력해주세요.&#10;예:&#10;https://example.com/image1.jpg&#10;https://example.com/image2.jpg"></textarea>
+    <div class="meta">여러 장을 등록하면 메인 가운데 사진이 자동으로 슬라이드됩니다. 한 줄에 URL 하나씩 입력하세요.</div>
+  </div>
+  <div class="actions">
+    <button class="btn" type="button" onclick="saveProfileImages()">프로필 사진 저장</button>
+  </div>
+  <div class="meta" id="profileImageStatus"></div>
+</div>
 <div class="actions"><button class="btn" onclick="addEvent()">일정 추가</button><button class="btn secondary" onclick="clearForm()">초기화</button><button class="btn secondary" onclick="logout()">로그아웃</button></div>
 <div class="meta" id="status">추가/삭제된 일정은 주간 일정표에 반영됩니다.</div>
 <div class="admin-list" id="adminList"></div>
@@ -910,7 +1121,7 @@ header #nav a{
 <!-- SKY-DAY RENDER + POSTGRESQL SYNC V1 -->
 <script>
 (function(){
-  var KEYS = ["gaksky_calendar_shared_v1", "skyCalendarEvents", "sky_notice_data", "skyDresses", "skyUpboItems"];
+  var KEYS = ["gaksky_calendar_shared_v1", "skyCalendarEvents", "sky_notice_data", "skyDresses", "skyUpboItems", "skyProfileData", "skyProfileImages"];
   var API = '/api/data/';
   var PASSWORD = 'soopgodsky221010><';
 
@@ -997,13 +1208,36 @@ document.addEventListener("click",e=>{if(!e.target.closest("#nav")&&!e.target.cl
 function toggleTheme(){document.body.classList.toggle("dark");localStorage.dark=document.body.classList.contains("dark")?"1":"0";document.getElementById('sky-day-theme').textContent=document.body.classList.contains("dark")?"☾":"☼"}
 if(localStorage.dark==="1"){document.body.classList.add("dark");document.getElementById('sky-day-theme').textContent="☾"}
 
-function events(){try{return JSON.parse(localStorage.getItem(KEY)||"[]")}catch{return[]}}
-function save(a){localStorage.setItem(KEY,JSON.stringify(a))}
+function normalizeEvent(e){
+  e=e||{};
+  return {
+    id:e.id,
+    date:e.date||"",
+    endDate:e.endDate||e.end||e.date||"",
+    end:e.end||e.endDate||e.date||"",
+    time:e.time||"",
+    endTime:e.endTime||"",
+    cat:e.cat||"기타",
+    title:e.title||"",
+    detail:e.detail||""
+  };
+}
+function events(){
+  try{
+    const raw=JSON.parse(localStorage.getItem("skyCalendarEvents")||localStorage.getItem(KEY)||"[]");
+    return Array.isArray(raw)?raw.map(normalizeEvent):[];
+  }catch{return[]}
+}
+function save(a){
+  const normalized=(Array.isArray(a)?a:[]).map(normalizeEvent);
+  localStorage.setItem("skyCalendarEvents",JSON.stringify(normalized.map(e=>({...e,end:e.endDate}))));
+  localStorage.setItem(KEY,JSON.stringify(normalized));
+}
 function id(){return Date.now()+"_"+Math.random().toString(36).slice(2)}
-function D(s){let [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)}
+function D(s){let [y,m,d]=String(s||"").split("-").map(Number);return new Date(y,m-1,d)}
 function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function overlap(e,d){return d>=D(e.date)&&d<=D(e.endDate||e.date)}
+function overlap(e,d){return d>=D(e.date)&&d<=D(e.endDate||e.end||e.date)}
 function list(d){return events().filter(e=>overlap(e,d)).sort((a,b)=>(a.time||"").localeCompare(b.time||""))}
 function monday(d){let x=new Date(d),n=x.getDay();x.setDate(x.getDate()+(n===0?-6:1-n));return x}
 function fdate(d){return d.getFullYear()+"년 "+(d.getMonth()+1)+"월 "+d.getDate()+"일"}
@@ -1029,13 +1263,31 @@ document.getElementById("weekView").innerHTML=out;
 }
 function week(n){wOff+=n;renderWeek()}
 
+async function refreshSharedCalendar(){
+  try{
+    const r=await fetch("/api/events",{cache:"no-store"});
+    if(!r.ok) throw new Error("일정 API 오류");
+    const remote=await r.json();
+    const normalized=(Array.isArray(remote)?remote:[]).map(normalizeEvent);
+
+    // Keep the profile's existing renderer and design; only replace its data source.
+    localStorage.setItem("skyCalendarEvents",JSON.stringify(normalized.map(e=>({...e,end:e.endDate}))));
+    localStorage.setItem(KEY,JSON.stringify(normalized));
+    renderWeek();
+    if(localStorage.getItem(SESSION)==="1") adminList();
+  }catch(err){
+    console.warn("공용 일정표 동기화 실패:",err);
+  }
+}
+
+
 
 
 function openAdmin(){document.getElementById("adminModal").classList.add("show");if(localStorage[SESSION]==="1")showEditor()}
 function closeAdmin(){document.getElementById("adminModal").classList.remove("show")}
 function login(){if(document.getElementById("pw").value===window.__SKY_DAY_ADMIN_PASSWORD__()){localStorage[SESSION]="1";showEditor()}else alert("비밀번호가 올바르지 않습니다.")}
 function logout(){delete localStorage[SESSION];document.getElementById("editor").style.display="none";document.getElementById("login").style.display="block"}
-function showEditor(){document.getElementById("login").style.display="none";document.getElementById("editor").style.display="block";adminList()}
+function showEditor(){document.getElementById("login").style.display="none";document.getElementById("editor").style.display="block";adminList();if(window.loadProfileImagesAdmin)window.loadProfileImagesAdmin();if(window.__startPendingProfileEdit__)window.__startPendingProfileEdit()}
 function clearForm(){["date","endDate","time","endTime","title","detail"].forEach(x=>document.getElementById(x).value="");document.getElementById("cat").value="talk"}
 function addEvent(){
 let date=document.getElementById("date").value,end=document.getElementById("endDate").value||date,title=document.getElementById("title").value.trim();
@@ -1048,7 +1300,10 @@ function adminList(){let a=events().sort((x,y)=>(x.date+x.time).localeCompare(y.
 function showText(t,c){document.getElementById("modalTitle").textContent=t;document.getElementById("modalText").textContent=c;document.getElementById("modal").classList.add("show")}
 function closeModal(){document.getElementById("modal").classList.remove("show")}
 function updateDDay(){let t=new Date,y=t.getFullYear(),b=new Date(y,1,4);if(b<t)b=new Date(y+1,1,4);document.getElementById("dday").textContent="D-DAY "+Math.ceil((b-t)/86400000)+"일";document.getElementById("days").textContent=Math.floor((t-new Date(2022,9,10))/86400000)+"일째"}
-updateDDay();renderWeek();
+updateDDay();
+renderWeek();
+refreshSharedCalendar();
+setInterval(refreshSharedCalendar,5000);
 </script>
 <!-- SKY-DAY DRESSING CTA VERIFIED -->
 <script>
@@ -1349,5 +1604,248 @@ updateDDay();renderWeek();
 })();
 </script>
 
-</body>
+<script id="sky-profile-inline-editor">
+(function(){
+  const PROFILE_KEY="skyProfileData";
+  const DEFAULTS={
+    birthday:"02월 04일",
+    firstBroadcast:"2022년 10월 10일",
+    mbti:"INFJ / ESTP",
+    fixedTime:"오후 5시",
+    broadcastDays:"월 · 화 · 수 · 목 · 금 / 일요일 고정휴방",
+    likes:"가족, 각시의 사랑, 비오는 날,\n눈오는 날, 손끝에 스치는 바람"
+  };
+  let editing=false;
+
+  function data(){
+    try{
+      const d=JSON.parse(localStorage.getItem(PROFILE_KEY)||"null");
+      return Object.assign({},DEFAULTS,(d&&typeof d==="object")?d:{});
+    }catch(e){return Object.assign({},DEFAULTS);}
+  }
+  function escHtml(v){
+    return String(v??"").replace(/[&<>"']/g,function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c];
+    });
+  }
+  function br(v){return escHtml(v).replace(/\n/g,"<br>");}
+
+  function render(d){
+    const map={
+      profileBirthday:d.birthday,
+      profileFirstBroadcast:d.firstBroadcast,
+      profileMbti:d.mbti,
+      profileFixedTime:d.fixedTime,
+      profileBroadcastDays:d.broadcastDays,
+      profileLikes:d.likes
+    };
+    Object.keys(map).forEach(function(id){
+      const el=document.getElementById(id);
+      if(el) el.innerHTML=br(map[id]);
+    });
+    updateDDay();
+  }
+
+  function beginEdit(){
+    if(editing)return;
+    editing=true;
+    const card=document.getElementById("profile");
+    card.classList.add("profile-editing");
+    const d=data();
+    const fields=[
+      ["profileBirthday","birthday","생일"],
+      ["profileFirstBroadcast","firstBroadcast","첫 방송일"],
+      ["profileMbti","mbti","MBTI"],
+      ["profileFixedTime","fixedTime","고정방송시간"],
+      ["profileBroadcastDays","broadcastDays","방송요일"],
+      ["profileLikes","likes","좋아하는 것"]
+    ];
+    fields.forEach(function(item){
+      const el=document.getElementById(item[0]); if(!el)return;
+      const ta=item[1]==="likes"||item[1]==="broadcastDays";
+      const input=document.createElement(ta?"textarea":"input");
+      input.className="profile-edit-input"+(ta?" profile-edit-area":"");
+      input.id="profileEdit_"+item[1];
+      input.value=d[item[1]]||"";
+      input.setAttribute("aria-label",item[2]);
+      el.innerHTML="";
+      el.appendChild(input);
+    });
+    const btn=document.getElementById("profileEditBtn");
+    if(btn)btn.textContent="저장";
+  }
+
+  function saveEdit(){
+    const d=data();
+    ["birthday","firstBroadcast","mbti","fixedTime","broadcastDays","likes"].forEach(function(k){
+      const el=document.getElementById("profileEdit_"+k);
+      if(el)d[k]=el.value.trim();
+    });
+    localStorage.setItem(PROFILE_KEY,JSON.stringify(d));
+    render(d);
+    editing=false;
+    document.getElementById("profile").classList.remove("profile-editing");
+    const btn=document.getElementById("profileEditBtn");
+    if(btn)btn.textContent="수정";
+  }
+
+  window.toggleProfileEdit=function(){
+    if(editing){saveEdit();return;}
+    if(localStorage.getItem("sky_day_shared_admin")==="1"){
+      beginEdit();
+    }else{
+      window.__SKY_PROFILE_EDIT_PENDING__=true;
+      if(typeof openAdmin==="function")openAdmin();
+      else alert("관리자 로그인이 필요합니다.");
+    }
+  };
+
+  window.__startPendingProfileEdit=function(){
+    if(window.__SKY_PROFILE_EDIT_PENDING__){
+      window.__SKY_PROFILE_EDIT_PENDING__=false;
+      beginEdit();
+    }
+  };
+
+  function loadShared(){
+    const d=data();
+    render(d);
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",loadShared);
+  else loadShared();
+
+  window.addEventListener("storage",function(e){
+    if(e.key===PROFILE_KEY)loadShared();
+  });
+})();
+</script>
+
+<script id="sky-profile-multi-slider-js">
+(function(){
+  const KEY="skyProfileImages";
+  const DEFAULT=["https://stimg.afreecatv.com/NORMAL_BBS/1/24960761/45616668a579de86a.gif"];
+  let images=DEFAULT.slice(), index=0, timer=null;
+
+  function getImages(){
+    try{
+      const v=JSON.parse(localStorage.getItem(KEY)||"null");
+      if(Array.isArray(v)){
+        const a=v.map(x=>String(x||"").trim()).filter(Boolean);
+        if(a.length)return a;
+      }
+    }catch(e){}
+    return DEFAULT.slice();
+  }
+  function render(){
+    const track=document.getElementById("profileSliderTrack");
+    const dots=document.getElementById("profileSliderDots");
+    if(!track||!dots)return;
+    images=getImages();
+    if(index>=images.length)index=0;
+    track.innerHTML=images.map(function(url,i){
+      return '<img class="sky-slider-slide'+(i===index?' active':'')+'" src="'+esc(url)+'" alt="각하늘 프로필 이미지 '+(i+1)+'" loading="'+(i===0?'eager':'lazy')+'">';
+    }).join("");
+    dots.innerHTML=images.map(function(_,i){
+      return '<button type="button" class="sky-slider-dot'+(i===index?' active':'')+'" onclick="window.skyProfileSlideTo('+i+')" aria-label="'+(i+1)+'번째 사진"></button>';
+    }).join("");
+    clearInterval(timer);
+    if(images.length>1)timer=setInterval(function(){go(1)},4500);
+  }
+  function esc(s){
+    return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]});
+  }
+  function go(step){
+    images=getImages();
+    if(images.length<2)return;
+    index=(index+step+images.length)%images.length;
+    render();
+  }
+  window.skyProfileSlideTo=function(i){
+    images=getImages();
+    if(i<0||i>=images.length)return;
+    index=i;render();
+  };
+  function init(){
+    render();
+    const prev=document.querySelector(".sky-slider-prev");
+    const next=document.querySelector(".sky-slider-next");
+    if(prev)prev.onclick=function(){go(-1)};
+    if(next)next.onclick=function(){go(1)};
+  }
+  window.addEventListener("storage",function(e){
+    if(e.key===KEY){index=0;render();}
+  });
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+
+  window.loadProfileImagesAdmin=function(){
+    const el=document.getElementById("profileImageUrls");
+    if(el)el.value=getImages().join("\n");
+  };
+  window.saveProfileImages=function(){
+    const el=document.getElementById("profileImageUrls");
+    const status=document.getElementById("profileImageStatus");
+    if(!el)return;
+    const a=el.value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+    if(!a.length){
+      alert("사진 URL을 한 장 이상 입력해주세요.");
+      return;
+    }
+    localStorage.setItem(KEY,JSON.stringify(a));
+    index=0;render();
+    if(status)status.textContent=a.length+"장의 프로필 사진을 저장했습니다.";
+  };
+})();
+</script>
+<script id="sky-season-effects-js">
+(function(){
+  const rootId="skySeasonFx";
+  function seasonInfo(){
+    const m=new Date().getMonth()+1;
+    if(m>=3&&m<=5)return {name:"spring",items:["🌸","🌸","🌺","🌸"],cls:"blossom",count:42};
+    if(m>=6&&m<=8)return {name:"summer",items:["🍃","🌿","🍃","🌱"],cls:"leaf",count:36};
+    if(m>=9&&m<=11)return {name:"autumn",items:["🍂","🍁","🍃","🍂"],cls:"autumn",count:40};
+    return {name:"winter",items:["❄","❅","❆","❄","✦"],cls:"snow",count:46};
+  }
+  function make(){
+    let root=document.getElementById(rootId);
+    if(!root){
+      root=document.createElement("div");
+      root.id=rootId;
+      root.setAttribute("aria-hidden","true");
+      document.body.insertBefore(root,document.body.firstChild);
+    }
+    const s=seasonInfo();
+    root.innerHTML="";
+    for(let i=0;i<s.count;i++){
+      const el=document.createElement("span");
+      el.className="sky-season-particle "+s.cls;
+      el.textContent=s.items[Math.floor(Math.random()*s.items.length)];
+      /* 이전보다 살짝 작은 크기 */
+      const size=s.name==="winter"?7+Math.random()*9:9+Math.random()*10;
+      const duration=12+Math.random()*10;
+      const delay=-(Math.random()*duration);
+      el.style.left=(-12+Math.random()*112)+"vw";
+      el.style.top=(-12+Math.random()*112)+"vh";
+      el.style.fontSize=size+"px";
+      el.style.animationDuration=duration+"s";
+      el.style.animationDelay=delay+"s";
+      el.style.opacity=(.35+Math.random()*.25).toFixed(2);
+      root.appendChild(el);
+    }
+  }
+  function init(){
+    make();
+    const day=24*60*60*1000;
+    setInterval(function(){
+      const now=new Date();
+      const key=now.getFullYear()+"-"+now.getMonth();
+      if(key!==window.__skySeasonKey){
+        window.__skySeasonKey=key;
+        make();
+      }
+    },day);
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+})();
+</script></body>
 </html>

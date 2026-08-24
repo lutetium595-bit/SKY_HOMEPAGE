@@ -23,7 +23,8 @@ const ALLOWED_KEYS = new Set([
   "skyCalendarEvents",
   "sky_notice_data",
   "skyDresses",
-  "skyUpboItems"
+  "skyUpboItems",
+  "skyProfileData"
 ]);
 
 app.use(express.json({ limit: "5mb" }));
